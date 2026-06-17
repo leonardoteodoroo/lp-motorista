@@ -219,40 +219,56 @@
         </div>
     </section>
 
-    <!-- Seção de Depoimentos -->
+    <!-- Seção de Depoimentos (Interativa com Typewriter e Áudio) -->
     <section id="depoimentos" class="content-section">
         <div class="container">
             <p class="section-tagline">Depoimentos</p>
             <h2 class="section-title">A Opinião de Quem Confia</h2>
             
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <p class="quote">"O serviço da LuxeDrive redefiniu meu conceito de transporte corporativo. A pontualidade e a extrema discrição do motorista são indispensáveis para o meu dia a dia."</p>
-                    <div class="author-info">
-                        <div class="author-details">
-                            <h3>Roberto S.</h3>
-                            <span>Diretor Financeiro (CFO)</span>
-                        </div>
+            <div class="typewriter-testimonials-container">
+                <!-- Balão de Depoimento Flutuante -->
+                <div class="testimonial-bubble" id="testimonial-bubble">
+                    <div class="bubble-text-wrapper">
+                        <span id="typewriter-text">Selecione um de nossos clientes abaixo para ler e ouvir o depoimento...</span>
+                        <span class="typewriter-cursor">|</span>
+                    </div>
+                    <div class="bubble-author-info">
+                        <p class="bubble-author-name" id="bubble-author-name"></p>
+                        <p class="bubble-author-title" id="bubble-author-title"></p>
+                    </div>
+                    <!-- Setinha do balão formada por bolinhas -->
+                    <div class="bubble-arrow">
+                        <div class="arrow-dot-1"></div>
+                        <div class="arrow-dot-2"></div>
+                        <div class="arrow-dot-3"></div>
                     </div>
                 </div>
-
-                <div class="testimonial-card">
-                    <p class="quote">"Utilizamos o serviço para recepcionar investidores estrangeiros no aeroporto. A cortesia, os carros de luxo e a atenção aos detalhes geram a melhor primeira impressão possível."</p>
-                    <div class="author-info">
-                        <div class="author-details">
-                            <h3>Carla M.</h3>
-                            <span>CEO de Tech Venture</span>
+                
+                <!-- Grade de Avatares dos Clientes -->
+                <div class="testimonial-avatars">
+                    <!-- Roberto S. -->
+                    <div class="avatar-card" data-index="0">
+                        <div class="avatar-wrapper">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a6dd7228f2d?q=80&w=150&auto=format&fit=crop" alt="Roberto S. - CFO" class="avatar-img">
                         </div>
+                        <h3 class="avatar-name">Roberto S.</h3>
+                        <span class="avatar-job">CFO</span>
                     </div>
-                </div>
-
-                <div class="testimonial-card">
-                    <p class="quote">"Privacidade total. Posso fazer reuniões e ligações confidenciais no banco de trás sabendo que o profissional à frente segue rígidos padrões éticos. Vale cada centavo."</p>
-                    <div class="author-info">
-                        <div class="author-details">
-                            <h3>Felipe D.</h3>
-                            <span>Sócio em Advocacia Executiva</span>
+                    <!-- Carla M. -->
+                    <div class="avatar-card" data-index="1">
+                        <div class="avatar-wrapper">
+                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=150&auto=format&fit=crop" alt="Carla M. - CEO" class="avatar-img">
                         </div>
+                        <h3 class="avatar-name">Carla M.</h3>
+                        <span class="avatar-job">CEO</span>
+                    </div>
+                    <!-- Felipe D. -->
+                    <div class="avatar-card" data-index="2">
+                        <div class="avatar-wrapper">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop" alt="Felipe D. - Sócio Executivo" class="avatar-img">
+                        </div>
+                        <h3 class="avatar-name">Felipe D.</h3>
+                        <span class="avatar-job">Sócio Executivo</span>
                     </div>
                 </div>
             </div>

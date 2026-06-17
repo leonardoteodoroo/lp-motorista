@@ -333,6 +333,144 @@ function initScrollAnimations() {
     });
 }
 
+/**
+ * Inicializa a seção de depoimentos interativos com efeito de máquina de escrever (typewriter) e áudio
+ */
+function initInteractiveTestimonials() {
+    const testimonialsData = [
+        {
+            name: "Roberto S.",
+            jobtitle: "Diretor Financeiro (CFO)",
+            text: "O serviço da LuxeDrive redefiniu meu conceito de transporte corporativo. A pontualidade e a extrema discrição do motorista são indispensáveis para o meu dia a dia.",
+            audio: "audio_1.mp3"
+        },
+        {
+            name: "Carla M.",
+            jobtitle: "CEO de Tech Venture",
+            text: "Utilizamos o serviço para recepcionar investidores estrangeiros no aeroporto. A cortesia, os carros de luxo e a atenção aos detalhes geram a melhor primeira impressão possível.",
+            audio: "audio_2.mp3"
+        },
+        {
+            name: "Felipe D.",
+            jobtitle: "Sócio em Advocacia Executiva",
+            text: "Privacidade total. Posso fazer reuniões e ligações confidenciais no banco de trás sabendo que o profissional à frente segue rígidos padrões éticos. Vale cada centavo.",
+            audio: "audio_3.mp3"
+        }
+    ];
+
+    const bubble = document.getElementById('testimonial-bubble');
+    const textWrapper = document.getElementById('typewriter-text');
+    const authorName = document.getElementById('bubble-author-name');
+    const authorTitle = document.getElementById('bubble-author-title');
+    const avatarCards = document.querySelectorAll('.avatar-card');
+
+    let activeAudio = null;
+    let typewriterTimeout = null;
+
+    function stopAudio() {
+        if (activeAudio) {
+            activeAudio.pause();
+            activeAudio.currentTime = 0;
+            activeAudio = null;
+        }
+    }
+
+    function stopTypewriter() {
+        if (typewriterTimeout) {
+            clearTimeout(typewriterTimeout);
+            typewriterTimeout = null;
+        }
+    }
+
+    function startTypewriter(text) {
+        stopTypewriter();
+        textWrapper.textContent = '';
+        
+        let i = 0;
+        function type() {
+            if (i <= text.length) {
+                textWrapper.textContent = text.slice(0, i);
+                i++;
+                typewriterTimeout = setTimeout(type, 35); // Velocidade de digitação elegante
+            }
+        }
+        type();
+    }
+
+    function activateTestimonial(index) {
+        // Limpar estados anteriores
+        stopAudio();
+        stopTypewriter();
+
+        // Remover classe ativa de todos
+        avatarCards.forEach(c => c.classList.remove('active'));
+
+        // Ativar o avatar selecionado
+        avatarCards[index].classList.add('active');
+        bubble.classList.add('active');
+
+        // Configurar e tocar o novo áudio
+        const audioFile = testimonialsData[index].audio;
+        // Tenta tocar o áudio. Como pode não haver arquivos físicos, capturamos o erro graciosamente
+        activeAudio = new Audio(`audio/${audioFile}`);
+        activeAudio.play().catch(err => {
+            console.warn("Áudio suspenso ou indisponível:", err);
+        });
+
+        // Atualizar informações do autor
+        authorName.textContent = testimonialsData[index].name;
+        authorTitle.textContent = testimonialsData[index].jobtitle;
+
+        // Iniciar máquina de escrever
+        startTypewriter(testimonialsData[index].text);
+    }
+
+    function deactivateTestimonial() {
+        stopAudio();
+        stopTypewriter();
+
+        avatarCards.forEach(c => c.classList.remove('active'));
+        bubble.classList.remove('active');
+
+        // Restaurar estado neutro inicial
+        textWrapper.textContent = "Selecione um de nossos clientes abaixo para ler e ouvir o depoimento...";
+        authorName.textContent = "";
+        authorTitle.textContent = "";
+    }
+
+    // Adicionar eventos aos avatares (Hover no desktop, Toque/Clique em tudo)
+    avatarCards.forEach((card, index) => {
+        card.addEventListener('mouseenter', () => {
+            if (window.innerWidth >= 1024) {
+                activateTestimonial(index);
+            }
+        });
+
+        card.addEventListener('mouseleave', () => {
+            if (window.innerWidth >= 1024) {
+                deactivateTestimonial();
+            }
+        });
+
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            activateTestimonial(index);
+        });
+    });
+
+    // Permitir fechar o depoimento ao clicar fora no mobile
+    document.addEventListener('click', () => {
+        if (window.innerWidth < 1024) {
+            deactivateTestimonial();
+        }
+    });
+
+    // Evitar propagação de clique de dentro do balão para não fechar no mobile
+    bubble.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+}
+
 // Inicialização após o carregamento completo do DOM
 document.addEventListener('DOMContentLoaded', async () => {
     // Buscar elementos dramáticos
@@ -395,6 +533,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Inicializar o ScrollTrigger
     initScrollAnimations();
+
+    // Inicializar os depoimentos interativos
+    initInteractiveTestimonials();
 
     // Configurar scroll suave ao clicar em links âncora internos
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

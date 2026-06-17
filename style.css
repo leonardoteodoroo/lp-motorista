@@ -609,66 +609,222 @@ p {
 }
 
 /* ==========================================================================
-   Seção Depoimentos (Testimonials)
+   Seção Depoimentos Interativa (Typewriter Testimonials)
    ========================================================================== */
-.testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+.typewriter-testimonials-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
-.testimonial-card {
-    background: var(--card-gradient);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    border-radius: 12px;
-    padding: 50px 40px;
+/* Balão do Depoimento */
+.testimonial-bubble {
+    position: relative;
+    background: rgba(10, 10, 10, 0.4);
+    border: 1px solid rgba(197, 168, 128, 0.1);
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    min-height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 320px;
-    transition: var(--transition-micro);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0.85;
 }
 
-.testimonial-card .quote {
-    font-size: 1.1rem;
-    font-style: italic;
-    font-weight: 300;
+.testimonial-bubble.active {
+    opacity: 1;
+    border-color: rgba(197, 168, 128, 0.3);
+    box-shadow: 0 35px 80px rgba(197, 168, 128, 0.04), 0 30px 60px rgba(0, 0, 0, 0.5);
+    transform: translateY(-5px);
+}
+
+.bubble-text-wrapper {
+    font-size: 1.25rem;
+    line-height: 1.8;
     color: var(--text-primary);
-    line-height: 1.7;
-    position: relative;
+    font-weight: 300;
+    font-style: italic;
+    min-height: 100px;
 }
 
-.testimonial-card .quote::before {
-    content: '“';
-    font-family: var(--font-heading);
-    font-size: 4rem;
-    color: rgba(197, 168, 128, 0.15);
-    position: absolute;
-    top: -30px;
-    left: -15px;
+.typewriter-cursor {
+    display: inline-block;
+    color: var(--accent-gold);
+    font-weight: 700;
+    margin-left: 4px;
+    animation: blink 0.8s infinite;
 }
 
-.author-info {
-    margin-top: 40px;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    padding-top: 20px;
+@keyframes blink {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
 }
 
-.author-details h3 {
+.bubble-author-info {
+    margin-top: 30px;
+    align-self: flex-end;
+    text-align: right;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.testimonial-bubble.active .bubble-author-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.bubble-author-name {
     font-family: var(--font-primary);
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 1.1rem;
+    font-weight: 600;
     color: var(--accent-gold);
 }
 
-.author-details span {
-    font-size: 0.78rem;
+.bubble-author-title {
+    font-size: 0.8rem;
     color: var(--text-muted);
+    margin-top: 4px;
 }
 
-.testimonial-card:hover {
-    border-color: rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.02);
+/* Setinha do Balão (Bolinhas 3D) */
+.bubble-arrow {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+}
+
+.arrow-dot-1 {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(197, 168, 128, 0.4);
+    transition: all 0.3s;
+}
+
+.arrow-dot-2 {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(197, 168, 128, 0.25);
+    transition: all 0.3s;
+}
+
+.arrow-dot-3 {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(197, 168, 128, 0.15);
+    transition: all 0.3s;
+}
+
+.testimonial-bubble.active .arrow-dot-1 {
+    background: rgba(197, 168, 128, 0.8);
+    transform: scale(1.2);
+}
+
+.testimonial-bubble.active .arrow-dot-2 {
+    background: rgba(197, 168, 128, 0.5);
+    transform: scale(1.2);
+}
+
+.testimonial-bubble.active .arrow-dot-3 {
+    background: rgba(197, 168, 128, 0.3);
+    transform: scale(1.2);
+}
+
+/* Grade de Avatares */
+.testimonial-avatars {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 50px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.avatar-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    width: 150px;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    padding: 4px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-bottom: 15px;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: all 0.4s;
+    filter: grayscale(100%) contrast(1.1);
+}
+
+.avatar-name {
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.avatar-job {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 4px;
+    transition: all 0.3s;
+}
+
+/* Estados de Hover e Ativo */
+.avatar-card:hover .avatar-wrapper,
+.avatar-card.active .avatar-wrapper {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 20px rgba(197, 168, 128, 0.3);
+    transform: scale(1.05);
+}
+
+.avatar-card:hover .avatar-img,
+.avatar-card.active .avatar-img {
+    filter: grayscale(0%) contrast(1.0);
+}
+
+.avatar-card:hover .avatar-name,
+.avatar-card.active .avatar-name {
+    color: var(--accent-gold);
+}
+
+.avatar-card.active {
+    transform: translateY(-3px);
 }
 
 /* ==========================================================================
@@ -967,5 +1123,48 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .trusted-by {
         font-size: 0.75rem !important;
         margin-bottom: 15px !important;
+    }
+
+    /* Otimização Responsiva da Seção de Depoimentos (Mobile) */
+    .typewriter-testimonials-container {
+        gap: 25px;
+    }
+
+    .testimonial-bubble {
+        padding: 30px 20px !important;
+        min-height: 280px !important;
+    }
+
+    .bubble-text-wrapper {
+        font-size: 1.05rem !important;
+        line-height: 1.65 !important;
+        min-height: 120px;
+    }
+
+    .bubble-author-info {
+        margin-top: 20px;
+    }
+
+    .testimonial-avatars {
+        gap: 20px !important;
+        flex-wrap: wrap;
+    }
+
+    .avatar-card {
+        width: 100px !important;
+    }
+
+    .avatar-wrapper {
+        width: 64px !important;
+        height: 64px !important;
+        margin-bottom: 8px;
+    }
+
+    .avatar-name {
+        font-size: 0.85rem !important;
+    }
+
+    .avatar-job {
+        font-size: 0.7rem !important;
     }
 }
