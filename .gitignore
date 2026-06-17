@@ -1,0 +1,6 @@
+.gemini/
+.system_generated/
+*.log
+Documento sem título
+.DS_Store
+node_modules/

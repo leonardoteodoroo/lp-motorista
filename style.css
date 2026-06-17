@@ -1,0 +1,885 @@
+/* ==========================================================================
+   Design System & Variáveis Premium (LuxeDrive)
+   ========================================================================== */
+:root {
+    /* Cores */
+    --bg-color: #050505;
+    --bg-alternate: #0c0c0c;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --text-muted: #666666;
+    
+    /* Cores de Acento */
+    --accent-gold: #c5a880;
+    --accent-gold-hover: #ffe9cc;
+    --accent-gold-glow: rgba(197, 168, 128, 0.15);
+    
+    /* Botão Amarelo de Contraste Vibrante (Pedida do Usuário) */
+    --accent-yellow: #f5c518;
+    --accent-yellow-hover: #ffd54f;
+    --accent-yellow-glow: rgba(245, 197, 24, 0.3);
+    
+    /* Gradientes */
+    --gold-gradient: linear-gradient(135deg, #c5a880 0%, #ffe9cc 100%);
+    --yellow-gradient: linear-gradient(135deg, #f5c518 0%, #ffe082 100%);
+    --bg-gradient: radial-gradient(circle at center, #121212 0%, #050505 100%);
+    --card-gradient: linear-gradient(to bottom right, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+    
+    /* Fontes */
+    --font-primary: 'Inter', sans-serif;
+    --font-heading: 'Outfit', sans-serif;
+    
+    /* Transições */
+    --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-micro: all 0.25s ease-out;
+}
+
+/* ==========================================================================
+   Resets & Configurações de Base
+   ========================================================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: auto; /* Controlado pelo Lenis */
+}
+
+/* Imagens responsivas e sem distorção */
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Links limpos */
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-micro);
+}
+
+/* Títulos Bold & Refinados */
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--text-primary);
+}
+
+p {
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* Rótulos e links em caixa alta com peso sutil */
+.label-caps {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+}
+
+/* Container padrão */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 40px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   Navegação (Fixa e Premium)
+   ========================================================================== */
+#main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 90px;
+    padding: 0 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    pointer-events: auto;
+    background: rgba(5, 5, 5, 0.45);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: var(--transition-smooth);
+}
+
+/* Esquerda: Links */
+.nav-links {
+    display: flex;
+    gap: 40px;
+    flex: 1;
+}
+
+.nav-item {
+    font-family: var(--font-primary);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    position: relative;
+    padding: 8px 0;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--accent-gold);
+    transition: var(--transition-micro);
+}
+
+.nav-item:hover {
+    color: var(--text-primary);
+}
+
+.nav-item:hover::after {
+    width: 100%;
+}
+
+/* Centro: Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex: 1;
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.logo-icon {
+    color: var(--accent-gold);
+    transition: var(--transition-smooth);
+}
+
+.logo:hover .logo-icon {
+    transform: rotate(45deg);
+}
+
+.logo-text {
+    font-weight: 300;
+}
+
+/* Direita: Botões */
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Botões do Menu */
+.button {
+    border-radius: 100px;
+    overflow: hidden;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: var(--transition-smooth);
+}
+
+.button a {
+    display: block;
+    padding: 12px 24px;
+    width: 100%;
+    height: 100%;
+}
+
+/* Botão Primário (Amarelo Ouro de Alto Contraste) */
+.button.primary {
+    background: var(--yellow-gradient);
+    color: #050505;
+    box-shadow: 0 4px 15px var(--accent-yellow-glow);
+}
+
+.button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 197, 24, 0.5);
+    background: linear-gradient(135deg, var(--accent-yellow-hover) 0%, #fffde7 100%);
+}
+
+/* Botão Secundário (Escuro/Borda) */
+.button.secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-primary);
+}
+
+.button.secondary:hover {
+    border-color: var(--accent-gold);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--accent-gold);
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Seção Hero (Scroll-Driven Canvas & 3D)
+   ========================================================================== */
+.hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+/* Canvas de Fundo */
+#hero-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* Overlay Escuro sobre o Canvas */
+.hero::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgba(5,5,5,0.75) 0%, rgba(5,5,5,0.45) 50%, rgba(5,5,5,0.95) 100%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Hero Content Perspective */
+.hero-content {
+    position: absolute;
+    width: 100%;
+    padding: 0 80px;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+}
+
+.header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.header h1 {
+    font-size: 4.2rem;
+    font-weight: 200;
+    max-width: 1000px;
+    text-transform: none;
+    color: var(--text-primary);
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
+}
+
+.hero-highlight {
+    display: block;
+    color: var(--accent-gold);
+    margin-top: 15px;
+    font-weight: 300;
+    background: linear-gradient(90deg, #c5a880, #fff2e0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.trusted-by {
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: var(--accent-gold);
+    opacity: 0.95;
+}
+
+/* Logos de Clientes */
+.client-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    max-width: 700px;
+    opacity: 0.55;
+    margin-top: 10px;
+}
+
+.client-logo {
+    width: 110px;
+    height: 30px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-micro);
+}
+
+.client-logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.client-logo:hover {
+    opacity: 1;
+    color: var(--accent-gold);
+    transform: scale(1.05);
+}
+
+/* Dashboard Parallax Container */
+.hero-image-container {
+    position: absolute;
+    width: 100%;
+    max-width: 1100px;
+    height: auto;
+    aspect-ratio: 16/9;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+    pointer-events: none;
+}
+
+.hero-image {
+    width: 90%;
+    border-radius: 16px;
+    box-shadow: 0 35px 90px rgba(0, 0, 0, 0.95), 
+                0 0 60px rgba(197, 168, 128, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    background: #0b0b0b;
+    transform-style: preserve-3d;
+    opacity: 0;
+    transform: translate3d(0, 0, 800px);
+}
+
+/* ==========================================================================
+   Seções de Conteúdo Tradicionais (Scroll Padrão)
+   ========================================================================== */
+.content-section {
+    padding: 120px 0;
+    position: relative;
+    background-color: var(--bg-color);
+    z-index: 10; /* Fica acima do Canvas fixo */
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+
+.alternate-bg {
+    background-color: var(--bg-alternate);
+}
+
+/* Cabeçalhos de Seção */
+.section-tagline {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 2.8rem;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 70px;
+    color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Seção Diferenciais (Grid de Benefícios)
+   ========================================================================== */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.benefit-card {
+    background: var(--card-gradient);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    padding: 50px 40px;
+    transition: var(--transition-micro);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.benefit-icon {
+    color: var(--accent-gold);
+    margin-bottom: 30px;
+    background: rgba(197, 168, 128, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(197, 168, 128, 0.1);
+    transition: var(--transition-micro);
+}
+
+.benefit-card h3 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 15px;
+    font-family: var(--font-heading);
+}
+
+.benefit-card p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* Hover nos Benefícios */
+.benefit-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(197, 168, 128, 0.3);
+    background: linear-gradient(to bottom right, rgba(197,168,128,0.04) 0%, rgba(255,255,255,0.01) 100%);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.benefit-card:hover .benefit-icon {
+    color: var(--text-primary);
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+}
+
+/* ==========================================================================
+   Seção Frota (Cards de Veículos)
+   ========================================================================== */
+.fleet-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.fleet-card {
+    background: var(--card-gradient);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: var(--transition-micro);
+}
+
+.fleet-image {
+    width: 100%;
+    height: 380px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fleet-image img {
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fleet-info {
+    padding: 40px;
+}
+
+.fleet-info h3 {
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+
+.fleet-info p {
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+
+.fleet-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fleet-features li {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fleet-features li::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--accent-gold);
+    border-radius: 50%;
+}
+
+/* Hover na Frota */
+.fleet-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(197, 168, 128, 0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.fleet-card:hover .fleet-image img {
+    transform: scale(1.04);
+}
+
+/* ==========================================================================
+   Seção Depoimentos (Testimonials)
+   ========================================================================== */
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.testimonial-card {
+    background: var(--card-gradient);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 320px;
+    transition: var(--transition-micro);
+}
+
+.testimonial-card .quote {
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-primary);
+    line-height: 1.7;
+    position: relative;
+}
+
+.testimonial-card .quote::before {
+    content: '“';
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    color: rgba(197, 168, 128, 0.15);
+    position: absolute;
+    top: -30px;
+    left: -15px;
+}
+
+.author-info {
+    margin-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 20px;
+}
+
+.author-details h4 {
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--accent-gold);
+}
+
+.author-details span {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.testimonial-card:hover {
+    border-color: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* ==========================================================================
+   Seção Contato & Formulário Minimalista
+   ========================================================================== */
+.contato-container {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.contato-desc {
+    font-size: 1.05rem;
+    font-weight: 300;
+    margin-bottom: 40px;
+}
+
+/* Botões do Bloco de Contato */
+.contato-links {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* WhatsApp Amarelo de Alto Contraste */
+.btn-whatsapp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--yellow-gradient);
+    color: #050505;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 18px 32px;
+    border-radius: 100px;
+    box-shadow: 0 8px 25px var(--accent-yellow-glow);
+    transition: var(--transition-smooth);
+}
+
+.btn-whatsapp:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(245, 197, 24, 0.5);
+    background: linear-gradient(135deg, var(--accent-yellow-hover) 0%, #fffde7 100%);
+}
+
+.btn-tel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 18px 32px;
+    border-radius: 100px;
+    transition: var(--transition-micro);
+}
+
+.btn-tel:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+    background: rgba(255,255,255,0.02);
+}
+
+/* Formulário Corporativo Minimalista */
+.contato-form {
+    background: var(--card-gradient);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    padding: 50px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-gold);
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 14px 18px;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    transition: var(--transition-micro);
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Estilo do calendário nativo nos inputs dark */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.btn-submit {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    padding: 18px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.btn-submit:hover {
+    background: var(--gold-gradient);
+    color: #050505;
+    box-shadow: 0 8px 25px var(--accent-gold-glow);
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Rodapé & Footer
+   ========================================================================== */
+.main-footer {
+    background: #020202;
+    padding: 50px 40px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.02);
+    z-index: 10;
+    position: relative;
+}
+
+.main-footer p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   Media Queries & Responsividade (Mobile)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    #main-nav {
+        padding: 0 40px;
+    }
+    
+    .header h1 {
+        font-size: 3.3rem;
+    }
+    
+    .contato-container {
+        gap: 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    #main-nav {
+        padding: 0 24px;
+        height: 70px;
+    }
+    
+    .nav-links {
+        display: none;
+    }
+    
+    .nav-buttons .button.secondary {
+        display: none;
+    }
+    
+    .logo {
+        justify-content: flex-start;
+        font-size: 1.25rem;
+    }
+    
+    .hero-content {
+        padding: 0 24px;
+    }
+    
+    .header h1 {
+        font-size: 2.1rem;
+        line-height: 1.2;
+    }
+    
+    .header {
+        gap: 20px;
+    }
+    
+    .client-logos {
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .client-logo {
+        width: 80px;
+    }
+    
+    .hero-image-container {
+        width: 95%;
+    }
+
+    .content-section {
+        padding: 80px 0;
+    }
+
+    .section-title {
+        font-size: 2.1rem;
+        margin-bottom: 45px;
+    }
+
+    .fleet-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .fleet-image {
+        height: 280px;
+    }
+
+    .contato-container {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+
+    .contato-form {
+        padding: 30px 24px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
