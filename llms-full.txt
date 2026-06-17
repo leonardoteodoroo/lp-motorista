@@ -15,7 +15,13 @@ LuxeDrive is a top-tier mobility provider specializing in executive transport, p
 - **Corporate Billing:** Simplified monthly invoicing (faturamento corporativo faturado) for registered businesses, avoiding manual expenses for executives.
 - **SLA & Precision:** Flight tracking and real-time navigation sync to guarantee arrival 15 minutes before the scheduled time.
 
-## 4. Executive Team & Contacts
+## 4. Navigation Links
+- [Go to LuxeDrive Homepage](https://motorista.semprenamoda.com.br/)
+- [Check robots.txt Configuration](https://motorista.semprenamoda.com.br/robots.txt)
+- [View Sitemap XML](https://motorista.semprenamoda.com.br/sitemap.xml)
+- [View Short LLMs.txt Overview](https://motorista.semprenamoda.com.br/llms.txt)
+
+## 5. Executive Team & Contacts
 - **Mak VieSAinte** (Founder): Strategic corporate leadership.
 - **Carla Fontes** (COO): Handles daily vehicle scheduling, emergency response, and partner relations.
 - **Felipe D'Avila** (CXO): Manages executive client satisfaction and bespoke travel requests.
@@ -23,13 +29,13 @@ LuxeDrive is a top-tier mobility provider specializing in executive transport, p
 - **Riche Makso** (CTO): Platform engineering.
 - **Osiris Balonga** (Lead Web): Website frontend development.
 
-## 5. Website Structure
+## 6. Website Structure
 - `#diferenciais`: Section showcasing the key company pillars (Punctuality, Privacy, Bilingual, Billing).
 - `#frota`: Interactive vehicle selection (Executive Sedan, Premium SUV).
 - `#equipe-showcase`: Visual corporate grid featuring our active leaders.
 - `#depoimentos`: Interactive audio and typewriter testimonial board.
 - `#contato`: Request and reservation forms.
 
-## 6. How to Book
+## 7. How to Book
 Clients can request a quote by providing their Name, Email, Corporate Domain, Chauffeur preference, and event details on our main website.
 URL: https://motorista.semprenamoda.com.br/
