@@ -147,15 +147,19 @@ function initScrollAnimations() {
             const progress = self.progress; // Progresso do scroll: 0 a 1
 
             // ==========================================================================
-            // 0. Animação da barra de navegação (Fade out no início)
+            // 0. Animação da barra de navegação (Invisível no início, surge após a primeira dobra sumir)
             // ==========================================================================
-            if (progress <= 0.08) {
-                const navOpacity = 1 - (progress / 0.08);
-                nav.style.opacity = navOpacity;
-                nav.style.pointerEvents = 'auto';
-            } else {
+            if (progress <= 0.12) {
                 nav.style.opacity = 0;
                 nav.style.pointerEvents = 'none';
+            } else if (progress > 0.12 && progress <= 0.22) {
+                // Fade-in gradual após o primeiro bloco sumir
+                const navOpacity = (progress - 0.12) / 0.10;
+                nav.style.opacity = navOpacity;
+                nav.style.pointerEvents = navOpacity >= 0.5 ? 'auto' : 'none';
+            } else {
+                nav.style.opacity = 1;
+                nav.style.pointerEvents = 'auto';
             }
 
             // ==========================================================================
@@ -327,6 +331,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Inicializar o canvas e mostrar indicador de carregamento
     resizeCanvas();
+    
+    // Ocultar a navegação na primeira dobra inicialmente
+    nav.style.opacity = 0;
+    nav.style.pointerEvents = 'none';
     
     context.fillStyle = '#c5a880';
     context.font = '300 20px Outfit, sans-serif';

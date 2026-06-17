@@ -113,7 +113,8 @@ p {
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
-    pointer-events: auto;
+    opacity: 0;
+    pointer-events: none;
     background: rgba(5, 5, 5, 0.45);
     backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
