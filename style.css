@@ -338,25 +338,31 @@ p {
 }
 
 /* Camada 3: Palavras-chave */
+/* Camada 3: Palavras-chave (Grid para sobrepor e centralizar) */
 .keyword-container {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    justify-items: center;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 30px;
+    width: 100%;
 }
 
 .keyword {
+    grid-column: 1;
+    grid-row: 1;
     font-family: var(--font-heading);
-    font-size: 4rem;
+    font-size: 4.6rem;
     font-weight: 300;
     font-style: italic;
     color: var(--accent-gold);
+    background: linear-gradient(90deg, #c5a880 30%, #fff2e0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     opacity: 0;
-    transform: translate3d(0, 35px, 0) scale(0.9);
-    display: inline-block;
-    text-shadow: 0 0 25px rgba(197, 168, 128, 0.4);
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translate3d(0, 0, 0px) scale(1.0);
+    text-shadow: 0 15px 35px rgba(0, 0, 0, 0.95);
+    backface-visibility: hidden;
 }
 
 /* Camada 4: Você merece mais do que uma corrida */
@@ -939,11 +945,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     }
     
     .keyword-container {
-        gap: 15px !important;
+        gap: 0px !important;
     }
     
     .keyword {
-        font-size: 1.8rem !important;
+        font-size: 2.1rem !important;
     }
     
     .forte-title {
