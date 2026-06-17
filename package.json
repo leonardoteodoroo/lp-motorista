@@ -1,0 +1,19 @@
+{
+  "name": "lp-motorista",
+  "version": "1.0.0",
+  "description": "Landing Page LuxeDrive - Premium Private Driver Service",
+  "main": "main.js",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "start": "python3 -m http.server 8080"
+  },
+  "keywords": [
+    "landing-page",
+    "gsap",
+    "scrolltrigger",
+    "lenis",
+    "canvas"
+  ],
+  "author": "Leonardo Teodoro Laureano",
+  "license": "ISC"
+}
