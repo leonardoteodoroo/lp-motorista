@@ -994,6 +994,70 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 /* ==========================================================================
+   Ciclo de Texto Animado (Animated Text Cycle)
+   ========================================================================== */
+.section-header-left {
+    text-align: left;
+    margin-bottom: 60px;
+    width: 100%;
+}
+
+.section-header-left .section-tagline {
+    text-align: left;
+}
+
+.text-cycle-title {
+    text-align: left;
+    margin-bottom: 0;
+    line-height: 1.25;
+}
+
+.text-cycle-wrapper {
+    display: inline-block;
+    position: relative;
+    vertical-align: bottom;
+    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Transição mola suave */
+    overflow: hidden;
+    height: 1.2em;
+    margin-left: 8px;
+}
+
+.text-cycle-word {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    white-space: nowrap;
+    font-weight: 600;
+    color: var(--accent-gold);
+    background: linear-gradient(90deg, #c5a880 30%, #fff2e0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.35s ease,
+                filter 0.35s ease;
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0px);
+}
+
+.text-cycle-word.exit {
+    transform: translateY(1.2em); /* Desliza para baixo */
+    opacity: 0;
+    filter: blur(4px);
+}
+
+.text-cycle-word.enter {
+    transform: translateY(-1.2em); /* Entra por cima */
+    opacity: 0;
+    filter: blur(4px);
+}
+
+.mobile-only {
+    display: none;
+}
+
+/* ==========================================================================
    Media Queries & Responsividade (Mobile)
    ========================================================================== */
 @media (max-width: 1024px) {
@@ -1166,5 +1230,31 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
     .avatar-job {
         font-size: 0.7rem !important;
+    }
+
+    /* Otimização Responsiva para o Ciclo de Texto no Celular */
+    .mobile-only {
+        display: block !important;
+    }
+    
+    .section-header-left {
+        text-align: center !important;
+        margin-bottom: 40px !important;
+    }
+    
+    .section-header-left .section-tagline {
+        text-align: center !important;
+    }
+    
+    .text-cycle-title {
+        text-align: center !important;
+        font-size: 2.1rem !important;
+        line-height: 1.35 !important;
+    }
+    
+    .text-cycle-wrapper {
+        margin-left: 0 !important;
+        margin-top: 6px;
+        height: 1.25em !important;
     }
 }

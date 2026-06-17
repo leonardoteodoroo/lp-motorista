@@ -471,6 +471,82 @@ function initInteractiveTestimonials() {
     });
 }
 
+/**
+ * Inicializa o ciclo de texto animado (Animated Text Cycle) com efeito de mola e fade 3D
+ */
+function initTextCycle() {
+    const words = [
+        "Conforto",
+        "Pontualidade",
+        "Privacidade",
+        "Exclusividade",
+        "Segurança",
+        "Tranquilidade"
+    ];
+    
+    const wrapper = document.querySelector('.text-cycle-wrapper');
+    const wordEl = document.getElementById('animated-text-cycle');
+    
+    if (!wrapper || !wordEl) return;
+    
+    // Criamos uma div invisível de medição para calcular a largura exata de cada palavra no mesmo estilo do título
+    const measureDiv = document.createElement('div');
+    measureDiv.style.position = 'absolute';
+    measureDiv.style.visibility = 'hidden';
+    measureDiv.style.height = '0';
+    measureDiv.style.overflow = 'hidden';
+    measureDiv.style.whiteSpace = 'nowrap';
+    measureDiv.className = 'section-title text-cycle-title'; // Herda a estilização de fonte do título
+    measureDiv.style.fontFamily = getComputedStyle(wordEl).fontFamily;
+    measureDiv.style.fontSize = getComputedStyle(wordEl).fontSize;
+    measureDiv.style.fontWeight = getComputedStyle(wordEl).fontWeight;
+    measureDiv.style.fontStyle = getComputedStyle(wordEl).fontStyle;
+    measureDiv.style.letterSpacing = getComputedStyle(wordEl).letterSpacing;
+    document.body.appendChild(measureDiv);
+    
+    let currentIndex = 0;
+    
+    // Define a largura inicial baseada na primeira palavra
+    measureDiv.textContent = words[0];
+    const initialWidth = measureDiv.getBoundingClientRect().width;
+    wrapper.style.width = `${initialWidth}px`;
+    wordEl.textContent = words[0];
+    
+    setInterval(() => {
+        const nextIndex = (currentIndex + 1) % words.length;
+        const nextWord = words[nextIndex];
+        
+        // 1. Calcular a largura da próxima palavra
+        measureDiv.textContent = nextWord;
+        const nextWidth = measureDiv.getBoundingClientRect().width;
+        
+        // 2. Aplicar a animação de saída à palavra atual
+        wordEl.classList.add('exit');
+        
+        // 3. Após a palavra antiga sumir (250ms), trocamos o texto e iniciamos a entrada
+        setTimeout(() => {
+            // Atualiza o texto
+            wordEl.textContent = nextWord;
+            
+            // Remove a classe de saída e adiciona a classe de entrada (posicionada acima)
+            wordEl.classList.remove('exit');
+            wordEl.classList.add('enter');
+            
+            // Ajusta a largura do contêiner com transição
+            wrapper.style.width = `${nextWidth}px`;
+            
+            // Força um reflow para o navegador aplicar a classe 'enter' antes de animar
+            wordEl.offsetHeight;
+            
+            // Remove a classe 'enter' para animar para a posição central de repouso
+            wordEl.classList.remove('enter');
+            
+            currentIndex = nextIndex;
+        }, 250);
+        
+    }, 3500); // Troca a cada 3.5 segundos
+}
+
 // Inicialização após o carregamento completo do DOM
 document.addEventListener('DOMContentLoaded', async () => {
     // Buscar elementos dramáticos
@@ -536,6 +612,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Inicializar os depoimentos interativos
     initInteractiveTestimonials();
+
+    // Inicializar o ciclo de texto animado
+    initTextCycle();
 
     // Configurar scroll suave ao clicar em links âncora internos
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
