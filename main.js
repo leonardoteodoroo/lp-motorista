@@ -139,7 +139,7 @@ function initScrollAnimations() {
     ScrollTrigger.create({
         trigger: '.hero',
         start: 'top top',
-        end: '+=1000%', // Duração estendida para 10 viewports para movimentos lentos e dramáticos
+        end: '+=1500%', // Duração estendida para 15 viewports para desacelerar a sensibilidade da rolagem
         pin: true,
         scrub: true,
         pinSpacing: true,
@@ -341,16 +341,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     context.textAlign = 'center';
     context.fillText('Carregando Experiência LuxeDrive...', window.innerWidth / 2, window.innerHeight / 2);
 
-    // Inicializar o Lenis (Smooth Scroll)
+    // Inicializar o Lenis (Smooth Scroll - Calibrado para ser majestoso e menos sensível)
     lenis = new Lenis({
-        duration: 1.5, // Rotação ligeiramente mais lenta e suave para a introdução dramática
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        duration: 2.2, // Aumentado para 2.2s para desaceleração muito mais suave e pesada (luxuosa)
+        easing: (t) => 1 - Math.pow(1 - t, 5), // Quint-out para desaceleração suave e progressiva
         direction: 'vertical',
         gestureDirection: 'vertical',
         smooth: true,
-        mouseMultiplier: 0.95,
-        smoothTouch: false,
-        touchMultiplier: 2,
+        wheelMultiplier: 0.65, // Reduzido de 1.0 para 0.65 para diminuir a sensibilidade da roda do mouse
+        touchMultiplier: 1.5,
         infinite: false,
     });
 
