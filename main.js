@@ -15,6 +15,10 @@ const images = [];
 let imagesLoadedCount = 0;
 const currentFrameObj = { frame: 1 };
 
+// Otimização Mobile: Se o dispositivo for celular (<768px), pula metade dos frames para economizar internet/memória
+const isMobile = window.innerWidth < 768;
+const frameStep = isMobile ? 2 : 1;
+
 /**
  * Retorna o caminho de um frame com base no índice (ex: 0001.jpg a 0173.jpg)
  */
@@ -46,17 +50,24 @@ function resizeCanvas() {
  */
 function preloadImages() {
     return new Promise((resolve) => {
-        for (let i = 1; i <= totalFrames; i++) {
+        const framesToLoad = [];
+        for (let i = 1; i <= totalFrames; i += frameStep) {
+            framesToLoad.push(i);
+        }
+        
+        const totalToLoad = framesToLoad.length;
+        
+        framesToLoad.forEach((i) => {
             const img = new Image();
             img.onload = img.onerror = () => {
                 imagesLoadedCount++;
-                if (imagesLoadedCount === totalFrames) {
+                if (imagesLoadedCount === totalToLoad) {
                     resolve();
                 }
             };
             img.src = getFramePath(i);
             images[i] = img;
-        }
+        });
     });
 }
 
@@ -64,6 +75,11 @@ function preloadImages() {
  * Desenha um frame no canvas simulando a propriedade CSS "object-fit: cover"
  */
 function renderFrame(index) {
+    // No mobile, se o frame solicitado for par (não carregado), ajustamos para o frame ímpar anterior
+    if (isMobile && !images[index]) {
+        index = index - (index % 2 === 0 ? 1 : 0);
+        index = Math.max(1, Math.min(totalFrames, index));
+    }
     const img = images[index];
     if (!img || !img.complete || !context) return;
 
