@@ -321,6 +321,8 @@ p {
     line-height: 1.1;
     color: var(--text-primary);
     text-shadow: 0 15px 40px rgba(0, 0, 0, 0.95);
+    white-space: nowrap;
+    will-change: transform, opacity;
 }
 
 /* Camada 2: É como você se sente durante o caminho */
@@ -335,28 +337,32 @@ p {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 15px 35px rgba(0, 0, 0, 0.95);
+    white-space: nowrap;
+    will-change: transform, opacity;
 }
 
 /* Camada 3: Palavras-chave */
 .keyword-container {
+    position: relative;
+    width: 100%;
+    height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 30px;
 }
 
 .keyword {
+    position: absolute;
     font-family: var(--font-heading);
-    font-size: 4rem;
+    font-size: 5.2rem;
     font-weight: 300;
     font-style: italic;
     color: var(--accent-gold);
     opacity: 0;
-    transform: translate3d(0, 35px, 0) scale(0.9);
-    display: inline-block;
+    visibility: hidden;
+    white-space: nowrap;
     text-shadow: 0 0 25px rgba(197, 168, 128, 0.4);
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
 }
 
 /* Camada 4: Você merece mais do que uma corrida */
@@ -371,6 +377,8 @@ p {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 50px rgba(245, 197, 24, 0.3), 0 5px 25px rgba(0, 0, 0, 0.95);
+    white-space: nowrap;
+    will-change: transform, opacity;
 }
 
 /* Contêiner de Logos de Clientes (Fase 2) */
@@ -869,6 +877,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     
     .hero-content {
         padding: 0 24px;
+    }
+    
+    .font-forte {
+        font-size: 4.8vw;
+    }
+    
+    .sub-title {
+        font-size: 4.8vw;
+    }
+    
+    .keyword {
+        font-size: 8.2vw;
+    }
+    
+    .forte-title {
+        font-size: 4.4vw;
+        letter-spacing: 0.12em;
     }
     
     .header h1 {

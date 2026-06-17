@@ -101,33 +101,25 @@ function renderFrame(index) {
 
 /**
  * Auxiliar para animar uma palavra-chave individual na Fase 3
+ * Aplica o mesmo efeito WOW 3D (Z-translate, scale crescendo e fade-out progressivo) do primeiro título.
  */
 function animateSingleKeyword(kwElement, start, end, progress) {
     if (progress >= start && progress <= end) {
         const range = end - start;
         const localProgress = (progress - start) / range; // 0 a 1
         
-        let opacity, scale, yTranslate;
-        
-        if (localProgress <= 0.5) {
-            // Entrada (primeira metade)
-            const enterProgress = localProgress / 0.5; // 0 a 1
-            opacity = enterProgress;
-            scale = 0.85 + enterProgress * 0.15; // 0.85 a 1.0
-            yTranslate = (1 - enterProgress) * 30; // 30px a 0px
-        } else {
-            // Saída (segunda metade)
-            const exitProgress = (localProgress - 0.5) / 0.5; // 0 a 1
-            opacity = 1 - exitProgress;
-            scale = 1.0 + exitProgress * 0.15; // 1.0 a 1.15
-            yTranslate = exitProgress * -30; // 0px a -30px
-        }
+        // Efeito idêntico à primeira frase: cresce em escala, aproxima em 3D e desaparece
+        const opacity = 1 - localProgress;
+        const scale = 1.0 + localProgress * 1.5; // Zoom out (cresce na tela)
+        const zTranslate = localProgress * 800;  // Voa em direção à tela
         
         kwElement.style.opacity = opacity;
-        kwElement.style.transform = `translate3d(0, ${yTranslate}px, 0) scale(${scale})`;
+        kwElement.style.transform = `translate3d(0, 0, ${zTranslate}px) scale(${scale})`;
+        kwElement.style.visibility = 'visible';
     } else {
         kwElement.style.opacity = 0;
-        kwElement.style.transform = `translate3d(0, 30px, 0) scale(0.9)`;
+        kwElement.style.visibility = 'hidden';
+        kwElement.style.transform = `translate3d(0, 0, 0) scale(1)`;
     }
 }
 
