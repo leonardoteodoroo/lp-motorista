@@ -1,12 +1,10 @@
-import gsap from 'https://esm.sh/gsap@3.12.5';
-import { ScrollTrigger } from 'https://esm.sh/gsap@3.12.5/ScrollTrigger';
-import Lenis from 'https://esm.sh/lenis@1.1.2';
+// Bibliotecas GSAP, ScrollTrigger e Lenis são carregadas globalmente via CDN no HTML
 
 // Registrar o plugin ScrollTrigger no GSAP
 gsap.registerPlugin(ScrollTrigger);
 
 // Elementos da página e variáveis de controle
-let nav, canvas, context, lenis, heroOverlay;
+let nav, canvas, context, lenis, heroOverlay, heroScrollTrigger;
 let step1, step2, step3, step4, clientLogosContainer;
 let kw1, kw2, kw3, kw4;
 
@@ -48,27 +46,62 @@ function resizeCanvas() {
 /**
  * Pré-carrega todos os frames da sequência de imagem na memória do navegador
  */
-function preloadImages() {
+/**
+ * Pré-carrega o primeiro frame imediatamente para exibição instantânea (LCP rápido)
+ */
+function preloadFirstFrame() {
     return new Promise((resolve) => {
-        const framesToLoad = [];
-        for (let i = 1; i <= totalFrames; i += frameStep) {
+        const img = new Image();
+        img.onload = img.onerror = () => {
+            images[1] = img;
+            resolve();
+        };
+        img.src = getFramePath(1);
+    });
+}
+
+/**
+ * Pré-carrega o restante dos frames em background de forma assíncrona (não-bloqueante)
+ */
+function preloadRemainingImages() {
+    const framesToLoad = [];
+    for (let i = 1; i <= totalFrames; i += frameStep) {
+        if (i !== 1) {
             framesToLoad.push(i);
         }
+    }
+    
+    const maxConcurrency = 3; // Limite de concorrência para não entupir a rede no Lighthouse
+    let index = 0;
+    
+    function loadNext() {
+        if (index >= framesToLoad.length) return;
         
-        const totalToLoad = framesToLoad.length;
+        const currentFrame = framesToLoad[index++];
+        const img = new Image();
         
-        framesToLoad.forEach((i) => {
-            const img = new Image();
-            img.onload = img.onerror = () => {
-                imagesLoadedCount++;
-                if (imagesLoadedCount === totalToLoad) {
-                    resolve();
+        img.onload = img.onerror = () => {
+            images[currentFrame] = img;
+            
+            // Se o usuário já tiver rolado para a fase de vídeo, renderiza o frame se coincidir com o atual
+            if (heroScrollTrigger && heroScrollTrigger.progress > 0.60) {
+                const canvasProgress = Math.min((heroScrollTrigger.progress - 0.60) / 0.38, 1);
+                const frameIndex = Math.max(1, Math.min(totalFrames, Math.round(canvasProgress * (totalFrames - 1) + 1)));
+                if (frameIndex === currentFrame) {
+                    renderFrame(currentFrame);
                 }
-            };
-            img.src = getFramePath(i);
-            images[i] = img;
-        });
-    });
+            }
+            
+            // Carrega a próxima imagem da fila
+            loadNext();
+        };
+        img.src = getFramePath(currentFrame);
+    }
+    
+    // Inicia os downloads concorrentes
+    for (let i = 0; i < Math.min(maxConcurrency, framesToLoad.length); i++) {
+        loadNext();
+    }
 }
 
 /**
@@ -142,11 +175,14 @@ function animateSingleKeyword(kwElement, start, end, progress) {
  * Inicializa a animação de scroll controlada pelo ScrollTrigger
  */
 function initScrollAnimations() {
+    const isMobile = window.innerWidth < 768;
+    const heroScrollEnd = isMobile ? '+=400%' : '+=1500%';
+
     // Configura o ScrollTrigger principal que fixa a seção hero
-    ScrollTrigger.create({
+    heroScrollTrigger = ScrollTrigger.create({
         trigger: '.hero',
         start: 'top top',
-        end: '+=1500%', // Duração estendida para 15 viewports para desacelerar a sensibilidade da rolagem
+        end: heroScrollEnd,
         pin: true,
         scrub: true,
         pinSpacing: true,
@@ -544,352 +580,13 @@ function initTextCycle() {
             currentIndex = nextIndex;
         }, 250);
         
-}
-
-/**
- * Inicializa os controles e interações do Header (scroll, menu hambúrguer mobile)
- */
-function initHeader() {
-    const header = document.getElementById('main-header');
-    const toggleBtn = document.getElementById('menu-toggle-btn');
-    const mobileOverlay = document.getElementById('mobile-menu-overlay');
-    const mobileLinks = document.querySelectorAll('.mobile-nav-item');
-
-    if (!header || !toggleBtn || !mobileOverlay) return;
-
-    // 1. Controle de Scroll (efeito encolher e blur)
-    const handleScroll = () => {
-        if (window.scrollY > 10) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    };
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Executar no load inicial
-
-    // 2. Toggle do Menu Mobile
-    const toggleMenu = (forceClose = false) => {
-        const isOpen = forceClose ? false : !toggleBtn.classList.contains('open');
-        
-        if (isOpen) {
-            toggleBtn.classList.add('open');
-            mobileOverlay.classList.add('open');
-            document.body.style.overflow = 'hidden';
-            if (lenis) lenis.stop();
-        } else {
-            toggleBtn.classList.remove('open');
-            mobileOverlay.classList.remove('open');
-            document.body.style.overflow = '';
-            if (lenis) lenis.start();
-        }
-    };
-
-    toggleBtn.addEventListener('click', () => toggleMenu());
-
-    // Fechar menu mobile ao clicar em um link âncora
-    mobileLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const href = link.getAttribute('href');
-            if (href && href !== '#' && href !== 'javascript:void(0)') {
-                toggleMenu(true);
-            }
-        });
-    });
-}
-
-/**
- * Inicializa a injeção sob demanda (lazy-load) e abertura do modal "Sobre Nós" & "Trabalhe Conosco"
- */
-function initSobreNos() {
-    const btnDesktop = document.getElementById('nav-link-sobre-nos');
-    const btnMobile = document.getElementById('mobile-link-sobre-nos');
-    const container = document.getElementById('sobre-nos-modal-container');
-    let injected = false;
-
-    if (!btnDesktop || !btnMobile || !container) return;
-
-    const modalHtml = `
-<div class="sobre-modal-overlay" id="sobre-modal">
-    <div class="sobre-modal-content">
-        <button class="sobre-modal-close" id="sobre-modal-close" aria-label="Fechar Modal">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-        
-        <div class="sobre-header">
-            <p class="modal-tagline">Nossa História</p>
-            <h2 class="modal-title">Sobre Nós</h2>
-        </div>
-
-        <div class="sobre-grid">
-            <!-- Bloco 1: O CEO -->
-            <div class="sobre-row">
-                <div class="sobre-img-container">
-                    <img src="assets/ceo.png" alt="CEO LuxeDrive" loading="lazy">
-                </div>
-                <div class="sobre-text-block">
-                    <h3>A Visão do Fundador</h3>
-                    <p>Fundada por Leonardo Laureano, a LuxeDrive nasceu de uma inquietação: a mobilidade executiva precisava ir além de apenas transportar pessoas do ponto A ao ponto B com eficiência. Era preciso resgatar a arte do serviço de alfaiataria em transporte.</p>
-                    <p>Com anos de experiência no mercado de alto padrão, Leonardo estruturou a empresa sob os pilares da discrição absoluta, pontualidade militar e atenção obsessiva aos detalhes. Cada viagem é pensada como um santuário de privacidade e conforto para os nossos clientes.</p>
-                </div>
-            </div>
-
-            <div class="modal-divider"></div>
-
-            <!-- Bloco 2: O Legado Familiar -->
-            <div class="sobre-row reverse">
-                <div class="sobre-text-block">
-                    <h3>O Legado Familiar</h3>
-                    <p>Para nós, segurança e cuidado não são termos corporativos: são valores de família. O zelo que dedicamos a cada passageiro é o mesmo que oferecemos aos nossos entes queridos em nosso próprio lar.</p>
-                    <p>Nossa herança de confiança reside em entender que a vida de quem está em nosso banco de trás é o maior bem de alguém. Por isso, operamos com a máxima responsabilidade, garantindo que você chegue ao seu destino e retorne para sua família em total segurança e serenidade.</p>
-                </div>
-                <div class="sobre-img-container">
-                    <img src="assets/ceo_familia.png" alt="Família do CEO" loading="lazy">
-                </div>
-            </div>
-
-            <div class="modal-divider"></div>
-
-            <!-- Bloco 3: Os Chauffeurs -->
-            <div class="sobre-row">
-                <div class="sobre-img-container">
-                    <img src="assets/equipe.png" alt="Equipe LuxeDrive" loading="lazy">
-                </div>
-                <div class="sobre-text-block">
-                    <h3>Nossos Chauffeurs Executivos</h3>
-                    <p>Nossos motoristas não são apenas condutores: são verdadeiros concierges da estrada. Passando por um dos processos seletivos mais exigentes do país, cada profissional é treinado em direção defensiva de evasão, etiqueta corporativa e protocolo diplomático.</p>
-                    <p>Todos os nossos motoristas são bilíngues, discretos e prontos para se adaptar à sua agenda dinâmica. A confidencialidade é protegida sob rígidos acordos de sigilo mútuo.</p>
-                </div>
-            </div>
-
-            <div class="modal-divider"></div>
-
-            <!-- Bloco 4: A Celebração do Sucesso -->
-            <div class="sobre-row reverse">
-                <div class="sobre-text-block">
-                    <h3>Cultura de Excelência</h3>
-                    <p>O sucesso de uma marca premium se constrói na união e no bem-estar de sua equipe. Na LuxeDrive, valorizamos e celebramos cada um de nossos colaboradores, promovendo uma cultura corporativa focada na dignidade profissional e no espírito de elite.</p>
-                    <p>Celebramos nossos marcos juntos, vestindo nossa melhor versão e reafirmando o compromisso de sermos o melhor serviço de mobilidade executiva do Brasil. Essa dedicação reflete diretamente na sofisticação com que conduzimos você diariamente.</p>
-                </div>
-                <div class="sobre-img-container">
-                    <img src="assets/equipe_gala.png" alt="Equipe LuxeDrive em Gala" loading="lazy">
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-divider"></div>
-
-        <!-- Seção Trabalhe Conosco -->
-        <div class="trabalhe-secao">
-            <h3>Trabalhe Conosco</h3>
-            <p class="trabalhe-desc">Se você busca a excelência profissional e possui o perfil exigido para prestar serviços no mercado de altíssimo luxo, envie sua candidatura para nossa equipe operacional.</p>
-            
-            <div class="trabalhe-grid">
-                <div class="requisitos-card">
-                    <h4>Requisitos de Admissão</h4>
-                    <ul class="requisitos-list">
-                        <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            CNH Categoria B ou superior, com observação EAR (Exerce Atividade Remunerada) obrigatória.
-                        </li>
-                        <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            Curso de transporte coletivo ou de passageiros atualizado e homologado.
-                        </li>
-                        <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            Experiência comprovada mínima de 3 anos em transporte executivo, diplomático ou corporativo premium.
-                        </li>
-                        <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            Nível de inglês básico a intermediário para recepção de estrangeiros (diferencial relevante).
-                        </li>
-                        <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            Postura refinada, ética profissional impecável e vestimenta social completa (terno escuro e gravata).
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="trabalhe-form">
-                    <form id="trabalhe-conosco-form" class="contato-form">
-                        <div class="form-group">
-                            <label for="tc-name">Nome Completo</label>
-                            <input type="text" id="tc-name" required placeholder="Seu nome completo">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="tc-email">E-mail</label>
-                                <input type="email" id="tc-email" required placeholder="seuemail@provedor.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="tc-phone">WhatsApp / Telefone</label>
-                                <input type="tel" id="tc-phone" required placeholder="(11) 99999-9999">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="tc-role">Cargo Pretendido</label>
-                                <select id="tc-role">
-                                    <option value="motorista">Chauffeur Executivo (Motorista)</option>
-                                    <option value="concierge">Concierge / Recepção</option>
-                                    <option value="suporte">Suporte Operacional</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="tc-file">Anexar Currículo (PDF/Word)</label>
-                                <div class="file-upload-wrapper">
-                                    <div class="file-upload-btn" id="file-upload-label">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                                        Selecionar Arquivo...
-                                    </div>
-                                    <input type="file" id="tc-file" required accept=".pdf,.doc,.docx">
-                                </div>
-                                <span class="file-name-display" id="file-name-display">Nenhum arquivo selecionado</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="tc-message">Resumo de Experiência & Apresentação</label>
-                            <textarea id="tc-message" rows="3" required placeholder="Fale brevemente sobre sua experiência com carros de luxo e atendimento executivo..."></textarea>
-                        </div>
-                        <button type="submit" class="btn-submit" id="btn-submit-tc">Enviar Candidatura</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-    `;
-
-    const openModal = () => {
-        if (!injected) {
-            container.innerHTML = modalHtml;
-            injected = true;
-            setupModalEvents();
-        }
-
-        const toggleBtn = document.getElementById('menu-toggle-btn');
-        const mobileOverlay = document.getElementById('mobile-menu-overlay');
-        if (toggleBtn && toggleBtn.classList.contains('open')) {
-            toggleBtn.classList.remove('open');
-            mobileOverlay.classList.remove('open');
-        }
-
-        const modal = document.getElementById('sobre-modal');
-        if (modal) {
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            if (lenis) lenis.stop();
-        }
-    };
-
-    const closeModal = () => {
-        const modal = document.getElementById('sobre-modal');
-        if (modal) {
-            modal.classList.remove('active');
-            const toggleBtn = document.getElementById('menu-toggle-btn');
-            if (toggleBtn && !toggleBtn.classList.contains('open')) {
-                document.body.style.overflow = '';
-                if (lenis) lenis.start();
-            }
-        }
-    };
-
-    const setupModalEvents = () => {
-        const modal = document.getElementById('sobre-modal');
-        const closeBtn = document.getElementById('sobre-modal-close');
-        const fileInput = document.getElementById('tc-file');
-        const fileLabel = document.getElementById('file-upload-label');
-        const fileNameDisplay = document.getElementById('file-name-display');
-        const form = document.getElementById('trabalhe-conosco-form');
-
-        if (closeBtn) {
-            closeBtn.addEventListener('click', closeModal);
-        }
-
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closeModal();
-                }
-            });
-        }
-
-        if (fileInput && fileLabel && fileNameDisplay) {
-            fileInput.addEventListener('change', () => {
-                if (fileInput.files.length > 0) {
-                    const name = fileInput.files[0].name;
-                    fileNameDisplay.textContent = name;
-                    fileNameDisplay.style.display = 'block';
-                    fileLabel.innerHTML = `
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                        Arquivo Selecionado
-                    `;
-                    fileLabel.style.borderColor = 'var(--accent-gold)';
-                    fileLabel.style.color = 'var(--text-primary)';
-                } else {
-                    fileNameDisplay.textContent = 'Nenhum arquivo selecionado';
-                    fileNameDisplay.style.display = 'none';
-                    fileLabel.innerHTML = `
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                        Selecionar Arquivo...
-                    `;
-                    fileLabel.style.borderColor = '';
-                    fileLabel.style.color = '';
-                }
-            });
-        }
-
-        if (form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const submitBtn = document.getElementById('btn-submit-tc');
-                if (submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.textContent = 'Enviando Candidatura...';
-                    submitBtn.style.opacity = '0.7';
-
-                    setTimeout(() => {
-                        alert('Candidatura enviada com sucesso! O departamento de Recursos Humanos da LuxeDrive entrará em contato após a triagem curricular.');
-                        form.reset();
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Enviar Candidatura';
-                        submitBtn.style.opacity = '';
-                        if (fileLabel && fileNameDisplay) {
-                            fileNameDisplay.textContent = 'Nenhum arquivo selecionado';
-                            fileNameDisplay.style.display = 'none';
-                            fileLabel.innerHTML = `
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                                Selecionar Arquivo...
-                            `;
-                            fileLabel.style.borderColor = '';
-                            fileLabel.style.color = '';
-                        }
-                        closeModal();
-                    }, 1500);
-                }
-            });
-        }
-    };
-
-    btnDesktop.addEventListener('click', (e) => {
-        e.preventDefault();
-        openModal();
-    });
-
-    btnMobile.addEventListener('click', (e) => {
-        e.preventDefault();
-        openModal();
-    });
+    }, 3500); // Troca a cada 3.5 segundos
 }
 
 // Inicialização após o carregamento completo do DOM
 document.addEventListener('DOMContentLoaded', async () => {
     // Buscar elementos dramáticos
-    nav = document.getElementById('main-header');
+    nav = document.getElementById('main-nav');
     canvas = document.getElementById('hero-canvas');
     context = canvas.getContext('2d');
     heroOverlay = document.getElementById('hero-overlay');
@@ -940,31 +637,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Desabilitar lagSmoothing para evitar "jumps" na animação do scroll
     gsap.ticker.lagSmoothing(0);
 
-    // Pré-carregar todas as imagens
-    await preloadImages();
-
-    // Renderizar o primeiro frame
+    // 1. Pré-carregar apenas o primeiro frame para renderização instantânea (LCP rápido)
+    await preloadFirstFrame();
     renderFrame(1);
 
-    // Inicializar o ScrollTrigger
+    // 2. Inicializar o ScrollTrigger e as seções de forma imediata (sem travar a inicialização do site)
     initScrollAnimations();
-
-    // Inicializar os depoimentos interativos
     initInteractiveTestimonials();
-
-    // Inicializar o ciclo de texto animado
     initTextCycle();
+    initAboutModal();
+    initTeamShowcase();
 
-    // Inicializar controles de navegação (Header e Sobre Nós)
-    initHeader();
-    initSobreNos();
+    // 3. Os demais frames serão carregados em background após o evento load da página
 
     // Configurar scroll suave ao clicar em links âncora internos
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#' || targetId === 'javascript:void(0)') return; // Ignora links vazios ou sem alvo
+            // Se o link for também o botão de abrir o modal, não rola
+            if (this.classList.contains('open-about-btn')) return;
+            
             e.preventDefault();
+            const targetId = this.getAttribute('href');
             const target = document.querySelector(targetId);
             if (target) {
                 lenis.scrollTo(target, {
@@ -982,3 +675,254 @@ document.addEventListener('DOMContentLoaded', async () => {
         ScrollTrigger.refresh();
     });
 });
+
+/**
+ * Gerencia a interatividade do modal "Sobre Nós" / "Trabalhe Conosco"
+ */
+function initAboutModal() {
+    const modal = document.getElementById('about-modal');
+    const openBtns = document.querySelectorAll('.open-about-btn');
+    const closeBtn = document.getElementById('about-modal-close');
+    const tabBtns = document.querySelectorAll('.modal-tab-btn');
+    const tabContents = document.querySelectorAll('.modal-tab-content');
+    const careerForm = document.getElementById('career-form');
+    const fileInput = document.getElementById('career-cv');
+    const fileLabel = document.querySelector('.file-upload-label');
+    const lazyImages = document.querySelectorAll('.lazy-modal-img');
+
+    if (!modal) return;
+
+    let imagesLoaded = false;
+
+    // 1. Carregamento sob demanda (Lazy Loading) das imagens do modal
+    function lazyLoadModalImages() {
+        if (imagesLoaded) return;
+        
+        lazyImages.forEach(img => {
+            const dataSrc = img.getAttribute('data-src');
+            if (dataSrc) {
+                img.src = dataSrc;
+                img.removeAttribute('data-src');
+                img.addEventListener('load', () => {
+                    img.classList.add('loaded');
+                });
+            }
+        });
+        
+        imagesLoaded = true;
+    }
+
+    // 2. Alternar entre as abas do modal
+    function switchTab(targetTabId) {
+        // Desativar todas as abas e botões
+        tabBtns.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // Ativar a aba e o botão correspondente
+        const activeBtn = Array.from(tabBtns).find(btn => btn.getAttribute('data-target') === targetTabId);
+        const activeContent = document.getElementById(targetTabId);
+
+        if (activeBtn) activeBtn.classList.add('active');
+        if (activeContent) activeContent.classList.add('active');
+
+        // Resetar scroll interno do modal ao alternar abas para topo
+        const container = modal.querySelector('.modal-container');
+        if (container) {
+            container.scrollTop = 0;
+        }
+    }
+
+    // 3. Abrir o modal
+    function openModal(tabType) {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        
+        // Pausar o scroll principal da página
+        if (lenis) {
+            lenis.stop();
+        }
+
+        // Carregar imagens dinamicamente apenas neste momento
+        lazyLoadModalImages();
+
+        // Determinar qual aba abrir inicialmente
+        const targetTabId = tabType === 'carreiras' ? 'tab-carreiras' : 'tab-historia';
+        switchTab(targetTabId);
+    }
+
+    // 4. Fechar o modal
+    function closeModal() {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        
+        // Retomar o scroll principal da página
+        if (lenis) {
+            lenis.start();
+        }
+    }
+
+    // Eventos de abertura
+    openBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tabType = btn.getAttribute('data-tab');
+            openModal(tabType);
+        });
+    });
+
+    // Eventos de fechamento
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+    }
+
+    // Fechar ao clicar fora do contêiner (no overlay escuro)
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Fechar ao pressionar tecla ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    // Alternar abas ao clicar nos botões do modal
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-target');
+            switchTab(target);
+        });
+    });
+
+    // Atualizar label do Input File ao selecionar currículo
+    if (fileInput && fileLabel) {
+        fileInput.addEventListener('change', (e) => {
+            const fileName = e.target.files[0]?.name || 'Selecionar arquivo...';
+            fileLabel.textContent = fileName;
+        });
+    }
+
+    // Submissão do formulário de candidatura (Trabalhe Conosco)
+    if (careerForm) {
+        careerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Simular envio e feedback de sucesso premium
+            const btnSubmit = document.getElementById('btn-submit-career');
+            const originalText = btnSubmit.textContent;
+            
+            btnSubmit.textContent = 'Enviando...';
+            btnSubmit.disabled = true;
+            
+            setTimeout(() => {
+                alert('Sua candidatura foi enviada com sucesso! Analisaremos seu perfil corporativo e entraremos em contato se houver alinhamento com nossos requisitos de elite.');
+                
+                // Resetar formulário
+                careerForm.reset();
+                if (fileLabel) {
+                    fileLabel.textContent = 'Selecionar arquivo...';
+                }
+                
+                // Restaurar botão
+                btnSubmit.textContent = originalText;
+                btnSubmit.disabled = false;
+                
+                // Fechar modal
+                closeModal();
+            }, 1500);
+        });
+    }
+}
+
+/**
+ * Gerencia a interatividade da seção "Team Showcase" (Equipe)
+ */
+function initTeamShowcase() {
+    const container = document.querySelector('.team-showcase-container');
+    const cards = document.querySelectorAll('.team-photo-card');
+    const rows = document.querySelectorAll('.team-member-row');
+
+    if (!container) return;
+
+    function activateMember(memberId) {
+        container.classList.add('has-hover');
+        
+        cards.forEach(card => {
+            if (card.getAttribute('data-member-id') === memberId) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
+            }
+        });
+
+        rows.forEach(row => {
+            if (row.getAttribute('data-member-id') === memberId) {
+                row.classList.add('active');
+            } else {
+                row.classList.remove('active');
+            }
+        });
+    }
+
+    function deactivateAll() {
+        container.classList.remove('has-hover');
+        cards.forEach(card => card.classList.remove('active'));
+        rows.forEach(row => row.classList.remove('active'));
+    }
+
+    // Eventos nos cards de foto
+    cards.forEach(card => {
+        const memberId = card.getAttribute('data-member-id');
+        
+        card.addEventListener('mouseenter', () => activateMember(memberId));
+        card.addEventListener('mouseleave', deactivateAll);
+        
+        // Suporte para toque em dispositivos móveis
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (card.classList.contains('active')) {
+                deactivateAll();
+            } else {
+                activateMember(memberId);
+            }
+        });
+    });
+
+    // Eventos nas linhas da lista de nomes
+    rows.forEach(row => {
+        const memberId = row.getAttribute('data-member-id');
+        
+        row.addEventListener('mouseenter', () => activateMember(memberId));
+        row.addEventListener('mouseleave', deactivateAll);
+        
+        // Suporte para toque em dispositivos móveis
+        row.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (row.classList.contains('active')) {
+                deactivateAll();
+            } else {
+                activateMember(memberId);
+            }
+        });
+    });
+
+    // Desativar hover ao clicar em qualquer outra parte da página
+    document.addEventListener('click', () => {
+        deactivateAll();
+    });
+}
+
+// Recalcular as posições do ScrollTrigger e iniciar pré-carregamento após o carregamento de todas as imagens e estilos
+window.addEventListener('load', () => {
+    ScrollTrigger.refresh();
+    
+    // Inicia o carregamento dos frames restantes de forma controlada após 1.5 segundos
+    setTimeout(() => {
+        preloadRemainingImages();
+    }, 1500);
+});
+
+

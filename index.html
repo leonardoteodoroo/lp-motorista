@@ -11,90 +11,45 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Montserrat:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- CDN para Bibliotecas JS (GSAP, Lenis) -->
-    <link rel="preconnect" href="https://esm.sh" crossorigin>
+    <!-- Preload do Primeiro Frame para LCP Rápido -->
+    <link rel="preload" href="frames/0001.jpg" as="image" fetchpriority="high">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Header Flutuante Premium -->
-    <header id="main-header">
-        <nav class="nav-container">
-            <!-- Esquerda: Logo -->
-            <div class="logo">
-                <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
-                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M12 2V9" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M12 15V22" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M2 12H9" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M15 12H22" stroke="currentColor" stroke-width="1.5"/>
-                </svg>
-                <span class="logo-text">LuxeDrive</span>
+    <!-- Navegação Superior -->
+    <nav id="main-nav">
+        <div class="nav-links">
+            <a href="#diferenciais" class="nav-item" id="nav-link-diferenciais">Diferenciais</a>
+            <a href="#frota" class="nav-item" id="nav-link-frota">Frota</a>
+            <a href="#depoimentos" class="nav-item" id="nav-link-depoimentos">Depoimentos</a>
+            <a href="#" class="nav-item open-about-btn" id="nav-link-sobre-nos" data-tab="historia">Sobre Nós</a>
+            <a href="#contato" class="nav-item" id="nav-link-contato">Contato</a>
+        </div>
+        <div class="logo">
+            <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M12 2V9" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M12 15V22" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M2 12H9" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M15 12H22" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            <span class="logo-text">LuxeDrive</span>
+        </div>
+        <div class="nav-buttons">
+            <div class="button secondary">
+                <a href="tel:+5511999999999" id="btn-phone">Ligar Agora</a>
             </div>
-
-            <!-- Centro/Direita: Links e Botões (Desktop) -->
-            <div class="nav-desktop-menu">
-                <div class="nav-links">
-                    <a href="#diferenciais" class="nav-item">Diferenciais</a>
-                    <a href="#frota" class="nav-item">Frota</a>
-                    <a href="#depoimentos" class="nav-item">Depoimentos</a>
-                    <a href="#" class="nav-item" id="nav-link-sobre-nos">Sobre Nós</a>
-                    <a href="#contato" class="nav-item">Contato</a>
-                </div>
-                <div class="nav-buttons">
-                    <div class="button secondary">
-                        <a href="tel:+5511999999999" id="btn-phone">Ligar Agora</a>
-                    </div>
-                    <div class="button primary">
-                        <a href="#contato" id="btn-book">Contratar Agora</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Botão Hambúrguer (Mobile) -->
-            <button id="menu-toggle-btn" class="menu-toggle-btn" aria-label="Menu de Navegação">
-                <svg
-                    class="menu-toggle-icon"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <path
-                        class="path-loop"
-                        d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
-                    />
-                    <path class="path-middle" d="M7 16 27 16" />
-                </svg>
-            </button>
-        </nav>
-
-        <!-- Menu Mobile Overlay -->
-        <div id="mobile-menu-overlay" class="mobile-menu-overlay">
-            <div class="mobile-menu-content">
-                <div class="mobile-nav-links">
-                    <a href="#diferenciais" class="mobile-nav-item">Diferenciais</a>
-                    <a href="#frota" class="mobile-nav-item">Frota</a>
-                    <a href="#depoimentos" class="mobile-nav-item">Depoimentos</a>
-                    <a href="#" class="mobile-nav-item" id="mobile-link-sobre-nos">Sobre Nós</a>
-                    <a href="#contato" class="mobile-nav-item">Contato</a>
-                </div>
-                <div class="mobile-nav-buttons">
-                    <div class="button secondary">
-                        <a href="tel:+5511999999999">Ligar Agora</a>
-                    </div>
-                    <div class="button primary">
-                        <a href="#contato">Contratar Agora</a>
-                    </div>
-                </div>
+            <div class="button primary">
+                <a href="#contato" id="btn-book">Contratar Agora</a>
             </div>
         </div>
-    </header>
+    </nav>
+
+    <main id="main-content">
 
     <!-- Seção Hero com Canvas e Elementos 3D -->
     <section class="hero" id="hero-section">
@@ -275,6 +230,149 @@
         </div>
     </section>
 
+    <!-- Seção de Equipe (Team Showcase) -->
+    <section id="equipe-showcase" class="content-section">
+        <div class="container">
+            <p class="section-tagline">Nossa Equipe</p>
+            <h2 class="section-title">A Mente por trás da Excelência</h2>
+            
+            <div class="team-showcase-container">
+                <!-- Grid de Fotos (Esquerda) -->
+                <div class="team-photos-grid">
+                    <!-- Coluna 1 -->
+                    <div class="team-photo-column col-1">
+                        <div class="team-photo-card card-size-1" data-member-id="1">
+                            <img src="assets/avatar_depoimentos.png" alt="Chadrack">
+                        </div>
+                        <div class="team-photo-card card-size-1" data-member-id="4">
+                            <img src="https://media.licdn.com/dms/image/v2/D4D03AQE-Z7-S1LSYNQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1724143166545?e=2147483647&v=beta&t=6IPCwgOzblGt4p2fEdnY74gMbLyRHii5Ite3A39qQsY" alt="Jacques">
+                        </div>
+                    </div>
+                    <!-- Coluna 2 -->
+                    <div class="team-photo-column col-2 offset-y-large">
+                        <div class="team-photo-card card-size-2" data-member-id="2">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2vnSxNNVGZV2MXRjlGELl-NgLl5kXdpDR6A&s" alt="Mak VieSAinte">
+                        </div>
+                        <div class="team-photo-card card-size-2" data-member-id="5">
+                            <img src="https://media.licdn.com/dms/image/v2/D4D03AQEkTAbZLlSrLg/profile-displayphoto-scale_200_200/B4DZoHdu8BGgAY-/0/1761061833315?e=2147483647&v=beta&t=Rg1dBTvq9X2heyhuhBwG2DsEkG65v0vQ35hF2FSeYns" alt="Riche Makso">
+                        </div>
+                    </div>
+                    <!-- Coluna 3 -->
+                    <div class="team-photo-column col-3 offset-y-small">
+                        <div class="team-photo-card card-size-3" data-member-id="3">
+                            <img src="https://media.licdn.com/dms/image/v2/D4D03AQGVqrPPAGHtoQ/profile-displayphoto-scale_200_200/B4DZwhAkjaHwAY-/0/1770080338529?e=2147483647&v=beta&t=q-_6p1VCJ8NN8eHj9zUFwJZds_XpKez9Hy14SAIDp4M" alt="Osiris Balonga">
+                        </div>
+                        <div class="team-photo-card card-size-3" data-member-id="6">
+                            <img src="https://i.pravatar.cc/400?img=16" alt="Jemima">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lista de Nomes (Direita) -->
+                <div class="team-names-list">
+                    <!-- Chadrack -->
+                    <div class="team-member-row" data-member-id="1">
+                        <div class="member-header">
+                            <span class="member-indicator"></span>
+                            <span class="member-name">Chadrack</span>
+                            <div class="member-socials">
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="X / Twitter">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+                                </a>
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="LinkedIn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                                </a>
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="Behance">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/><path d="M18 10h4v2h-4z"/><path d="M3 17h12v-1.5c0-1.8-1.7-3.5-3.5-3.5h-5C4.7 12 3 13.7 3 15.5V17z"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="member-role">director of photography</p>
+                    </div>
+
+                    <!-- Mak VieSAinte -->
+                    <div class="team-member-row" data-member-id="2">
+                        <div class="member-header">
+                            <span class="member-indicator"></span>
+                            <span class="member-name">Mak VieSAinte</span>
+                            <div class="member-socials">
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="X / Twitter">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+                                </a>
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="LinkedIn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="member-role">FOUNDER</p>
+                    </div>
+
+                    <!-- Osiris Balonga -->
+                    <div class="team-member-row" data-member-id="3">
+                        <div class="member-header">
+                            <span class="member-indicator"></span>
+                            <span class="member-name">Osiris Balonga</span>
+                            <div class="member-socials">
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="X / Twitter">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+                                </a>
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="LinkedIn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="member-role">LEAD FRONT-END</p>
+                    </div>
+
+                    <!-- Jacques -->
+                    <div class="team-member-row" data-member-id="4">
+                        <div class="member-header">
+                            <span class="member-indicator"></span>
+                            <span class="member-name">Jacques</span>
+                            <div class="member-socials">
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="LinkedIn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="member-role">PRODUCT OWNER</p>
+                    </div>
+
+                    <!-- Riche Makso -->
+                    <div class="team-member-row" data-member-id="5">
+                        <div class="member-header">
+                            <span class="member-indicator"></span>
+                            <span class="member-name">Riche Makso</span>
+                            <div class="member-socials">
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="X / Twitter">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+                                </a>
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="LinkedIn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="member-role">CTO - PRODUCT DESIGNER</p>
+                    </div>
+
+                    <!-- Jemima -->
+                    <div class="team-member-row" data-member-id="6">
+                        <div class="member-header">
+                            <span class="member-indicator"></span>
+                            <span class="member-name">Jemima</span>
+                            <div class="member-socials">
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="Instagram">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="member-role">MAKE-UP ARTISTE</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Seção de Depoimentos (Interativa com Typewriter e Áudio) -->
     <section id="depoimentos" class="content-section">
         <div class="container">
@@ -305,7 +403,7 @@
                     <!-- Roberto S. -->
                     <div class="avatar-card" data-index="0">
                         <div class="avatar-wrapper">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a6dd7228f2d?q=80&w=150&auto=format&fit=crop" alt="Roberto S. - CFO" class="avatar-img">
+                            <img src="assets/avatar_depoimentos.png" alt="Roberto S. - CFO" class="avatar-img">
                         </div>
                         <h3 class="avatar-name">Roberto S.</h3>
                         <span class="avatar-job">CFO</span>
@@ -388,13 +486,191 @@
         </div>
     </section>
 
+    </main>
+
     <!-- Rodapé -->
     <footer class="main-footer">
-        <p>&copy; 2026 LuxeDrive. Todos os direitos reservados. Serviços Premium de Motorista Executivo.</p>
+        <div class="footer-content">
+            <p>&copy; 2026 LuxeDrive. Todos os direitos reservados. Serviços Premium de Motorista Executivo.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link open-about-btn" data-tab="historia">Sobre Nós</a>
+                <span class="footer-divider">|</span>
+                <a href="#" class="footer-link open-about-btn" data-tab="carreiras">Trabalhe Conosco</a>
+            </div>
+        </div>
     </footer>
 
-    <!-- Contêiner do Modal Sobre Nós e Trabalhe Conosco (Carregado via Lazy-Load) -->
-    <div id="sobre-nos-modal-container"></div>
+    <!-- Modal Sobre Nós & Trabalhe Conosco (Carregado Sob Demanda) -->
+    <div id="about-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-container" data-lenis-prevent>
+            <button id="about-modal-close" class="modal-close-btn" aria-label="Fechar Modal">&times;</button>
+            
+            <div class="modal-header">
+                <div class="modal-tabs">
+                    <button class="modal-tab-btn active" data-target="tab-historia">Nossa História</button>
+                    <button class="modal-tab-btn" data-target="tab-carreiras">Trabalhe Conosco</button>
+                </div>
+            </div>
+            
+            <div class="modal-content-wrapper">
+                <!-- Aba: Nossa História -->
+                <div id="tab-historia" class="modal-tab-content active">
+                    <div class="about-intro">
+                        <span class="about-tag">Sua Jornada em Altíssimo Padrão</span>
+                        <h2 class="about-title">Nossa Trajetória e Valores</h2>
+                        <p class="about-subtitle">LuxeDrive não é apenas transporte de luxo, é a materialização de um compromisso absoluto com a exclusividade, discrição e segurança de nossos passageiros. Conheça as mentes e as vidas por trás do nosso padrão impecável.</p>
+                    </div>
+                    
+                    <div class="about-sections">
+                        <!-- Seção 1: O Fundador -->
+                        <div class="about-row">
+                            <div class="about-img-box">
+                                <img data-src="assets/ceo_portrait.png" alt="Retrato do Fundador e CEO - LuxeDrive" class="lazy-modal-img">
+                            </div>
+                            <div class="about-text-box">
+                                <h3>O Fundador & A Visão</h3>
+                                <p>Alexandre D'Astous, fundador e CEO da LuxeDrive, iniciou a empresa com um propósito claro: elevar a mobilidade executiva no Brasil a patamares nunca antes vistos. Com vasta experiência em hotelaria de luxo internacional, Alexandre trouxe o atendimento ultra-personalizado "concierge" para o trânsito corporativo das grandes metrópoles, fundindo a pontualidade prussiana com o calor da hospitalidade brasileira.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção 2: Família -->
+                        <div class="about-row reverse">
+                            <div class="about-img-box">
+                                <img data-src="assets/ceo_family.png" alt="Alexandre D'Astous com sua família e filhos pequenos" class="lazy-modal-img">
+                            </div>
+                            <div class="about-text-box">
+                                <h3>Valores Familiares & Legado</h3>
+                                <p>Por trás do rigor corporativo e do atendimento de excelência, existe a base que sustenta todo o nosso compromisso: a família. Como pai de dois filhos pequenos, Alexandre compreende que segurança, confiabilidade e tranquilidade são os bens mais preciosos de qualquer pessoa. A LuxeDrive nasceu e é gerida como um negócio familiar que preza pela segurança contínua de cada passageiro, tratando todos os clientes com o cuidado e respeito que reservaríamos aos nossos próprios entes queridos.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção 3: A Equipe Elite -->
+                        <div class="about-row">
+                            <div class="about-img-box">
+                                <img data-src="assets/team_photo.png" alt="Equipe de Motoristas Profissionais em frente à frota LuxeDrive" class="lazy-modal-img">
+                            </div>
+                            <div class="about-text-box">
+                                <h3>Nossa Equipe de Elite</h3>
+                                <p>Nossos motoristas não são apenas condutores, são embaixadores do padrão LuxeDrive. Cada membro passa por uma triagem rigorosa que envolve verificação completa de antecedentes criminais, cursos avançados de direção defensiva e evasiva, além de testes periódicos de postura e protocolo executivo. Contamos com profissionais bilíngues que compreendem as nuances do tráfego corporativo e a necessidade imperiosa de sigilo absoluto sobre os assuntos tratados no veículo.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção 4: Gala -->
+                        <div class="about-row reverse">
+                            <div class="about-img-box">
+                                <img data-src="assets/team_gala.png" alt="Equipe de Gala em Smoking LuxeDrive em salão corporativo chique" class="lazy-modal-img">
+                            </div>
+                            <div class="about-text-box">
+                                <h3>Sofisticação e Grandes Eventos</h3>
+                                <p>Nosso padrão de sofisticação acompanha os momentos mais decisivos de sua empresa. Para casamentos, solenidades, premiações corporativas e recepções oficiais, nossa equipe veste-se rigorosamente em trajes de gala completos. O alinhamento perfeito, a postura impecável e a coordenação milimétrica da frota garantem que a chegada e a partida de seus convidados de honra sejam um espetáculo à parte, refletindo a grandiosidade e o prestígio de sua marca.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Aba: Trabalhe Conosco -->
+                <div id="tab-carreiras" class="modal-tab-content">
+                    <div class="career-container">
+                        <div class="career-info-column">
+                            <span class="about-tag">Carreira Executiva</span>
+                            <h2 class="about-title">Seja um Motorista LuxeDrive</h2>
+                            <p class="career-intro-text">Estamos constantemente buscando profissionais de elite para integrar nossa equipe. Se você atende aos nossos altos padrões de exigência e deseja construir uma carreira sólida na maior referência de mobilidade premium, envie sua candidatura.</p>
+                            
+                            <div class="career-requirements">
+                                <h3>Requisitos Obrigatórios:</h3>
+                                <ul>
+                                    <li>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        CNH Categoria D ou superior com observação "EAR" ativa.
+                                    </li>
+                                    <li>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Curso de Condutor de Veículo de Transporte Coletivo de Passageiros (Resolução CONTRAN).
+                                    </li>
+                                    <li>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Certificação atualizada em Direção Defensiva avançada.
+                                    </li>
+                                    <li>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Certidão negativa de antecedentes criminais (Estadual e Federal) atualizada.
+                                    </li>
+                                    <li>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Experiência comprovada mínima de 3 anos em transporte executivo ou corporativo.
+                                    </li>
+                                    <li>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Apresentação pessoal impecável: terno social completo escuro e gravata discreta.
+                                    </li>
+                                    <li>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Conhecimento avançado de vias expressas, aeroportos e rotas corporativas.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="career-form-column">
+                            <form id="career-form">
+                                <div class="form-group">
+                                    <label for="career-name">Nome Completo</label>
+                                    <input type="text" id="career-name" required placeholder="Digite seu nome completo">
+                                </div>
+                                <div class="form-group">
+                                    <label for="career-email">E-mail de Contato</label>
+                                    <input type="email" id="career-email" required placeholder="seuemail@provedor.com">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="career-phone">Telefone / WhatsApp</label>
+                                        <input type="tel" id="career-phone" required placeholder="(11) 99999-9999">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="career-cnh">CNH Categoria / EAR</label>
+                                        <select id="career-cnh" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="D-EAR">Categoria D com EAR</option>
+                                            <option value="E-EAR">Categoria E com EAR</option>
+                                            <option value="B-EAR">Categoria B com EAR (Sob análise)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="career-experience">Tempo de Experiência</label>
+                                        <select id="career-experience" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="3-5">De 3 a 5 anos</option>
+                                            <option value="5-10">De 5 a 10 anos</option>
+                                            <option value="10+">Mais de 10 anos</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="career-cv">Currículo (PDF / DOCX)</label>
+                                        <div class="file-upload-wrapper">
+                                            <input type="file" id="career-cv" accept=".pdf,.docx,.doc" required>
+                                            <span class="file-upload-label">Selecionar arquivo...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="career-message">Apresentação Pessoal (Opcional)</label>
+                                    <textarea id="career-message" rows="3" placeholder="Fale brevemente sobre sua experiência em atendimento a executivos..."></textarea>
+                                </div>
+                                <button type="submit" class="btn-submit" id="btn-submit-career">Enviar Candidatura</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bibliotecas de Terceiros via CDN de Alta Performance -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.2/dist/lenis.min.js"></script>
 
     <!-- Custom JavaScript -->
     <script type="module" src="main.js"></script>
