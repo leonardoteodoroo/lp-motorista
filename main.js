@@ -6,7 +6,7 @@ import Lenis from 'https://esm.sh/lenis@1.1.2';
 gsap.registerPlugin(ScrollTrigger);
 
 // Elementos da página e variáveis de controle
-let nav, canvas, context, heroImage, lenis;
+let nav, canvas, context, lenis;
 let step1, step2, step3, step4, clientLogosContainer;
 let kw1, kw2, kw3, kw4;
 
@@ -265,43 +265,32 @@ function initScrollAnimations() {
             }
 
             // ==========================================================================
-            // 5. REPRODUÇÃO DO VÍDEO (0.60 a 0.95)
+            // 5. REPRODUÇÃO DO VÍDEO (0.60 a 0.98)
             // ==========================================================================
             if (progress <= 0.60) {
                 // Durante toda a Fase 1 (Drama), o vídeo fica travado no primeiro frame
                 currentFrameObj.frame = 1;
                 renderFrame(1);
             } else {
-                // A partir daqui, a estrada avança conforme o scroll
-                const canvasProgress = Math.min((progress - 0.60) / 0.35, 1); // 0 a 1 em 35% de scroll
+                // A partir daqui, a estrada avança conforme o scroll por todo o restante do hero
+                const canvasProgress = Math.min((progress - 0.60) / 0.38, 1); // 0 a 1 em 38% de scroll (termina em ~0.98)
                 const frameIndex = Math.max(1, Math.min(totalFrames, Math.round(canvasProgress * (totalFrames - 1) + 1)));
                 currentFrameObj.frame = frameIndex;
                 renderFrame(frameIndex);
             }
 
             // ==========================================================================
-            // 6. DASHBOARD & LOGOS DE CLIENTES (0.75 a 0.95)
+            // 6. LOGOS DE CLIENTES NO FINAL (0.80 a 0.98)
             // ==========================================================================
-            if (progress >= 0.75) {
-                const dashProgress = Math.min((progress - 0.75) / 0.20, 1); // 0 a 1 em 20% de scroll
-                const opacity = Math.min(dashProgress / 0.75, 1); // Atinge opacidade 1 antes do fim
-                const zTranslate = (1 - dashProgress) * 800; // Recua do Z-depth até 0px
-                const yLogos = (1 - dashProgress) * 30; // Logos sobem 30px até a posição
+            if (progress >= 0.80) {
+                const logosProgress = Math.min((progress - 0.80) / 0.18, 1); // 0 a 1 em 18% de scroll
+                const opacity = logosProgress * 0.95;
+                const yLogos = (1 - logosProgress) * 30; // Logos sobem 30px até a posição
                 
-                // Dashboard
-                heroImage.style.transform = `translate3d(0, 0, ${zTranslate}px)`;
-                heroImage.style.opacity = opacity;
-                heroImage.style.pointerEvents = 'auto';
-
-                // Logos
-                clientLogosContainer.style.opacity = opacity * 0.95;
+                clientLogosContainer.style.opacity = opacity;
                 clientLogosContainer.style.transform = `translate3d(-50%, ${yLogos}px, 0)`;
                 clientLogosContainer.style.visibility = 'visible';
             } else {
-                heroImage.style.opacity = 0;
-                heroImage.style.transform = `translate3d(0, 0, 800px)`;
-                heroImage.style.pointerEvents = 'none';
-
                 clientLogosContainer.style.opacity = 0;
                 clientLogosContainer.style.transform = `translate3d(-50%, 30px, 0)`;
                 clientLogosContainer.style.visibility = 'hidden';
@@ -316,7 +305,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     nav = document.getElementById('main-nav');
     canvas = document.getElementById('hero-canvas');
     context = canvas.getContext('2d');
-    heroImage = document.querySelector('.hero-image');
     
     step1 = document.querySelector('.step-1');
     step2 = document.querySelector('.step-2');

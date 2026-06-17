@@ -430,34 +430,7 @@ p {
     transform: scale(1.05);
 }
 
-/* Dashboard Parallax Container */
-.hero-image-container {
-    position: absolute;
-    width: 100%;
-    max-width: 1100px;
-    height: auto;
-    aspect-ratio: 16/9;
-    z-index: 5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    perspective: 1200px;
-    transform-style: preserve-3d;
-    pointer-events: none;
-}
 
-.hero-image {
-    width: 90%;
-    border-radius: 16px;
-    box-shadow: 0 35px 90px rgba(0, 0, 0, 0.95), 
-                0 0 60px rgba(197, 168, 128, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    overflow: hidden;
-    background: #0b0b0b;
-    transform-style: preserve-3d;
-    opacity: 0;
-    transform: translate3d(0, 0, 800px);
-}
 
 /* ==========================================================================
    Seções de Conteúdo Tradicionais (Scroll Padrão)
