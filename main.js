@@ -6,7 +6,10 @@ import Lenis from 'https://esm.sh/lenis@1.1.2';
 gsap.registerPlugin(ScrollTrigger);
 
 // Elementos da página e variáveis de controle
-let nav, header, canvas, context, heroImage, lenis;
+let nav, canvas, context, heroImage, lenis;
+let step1, step2, step3, step4, clientLogosContainer;
+let kw1, kw2, kw3, kw4;
+
 const totalFrames = 173;
 const images = [];
 let imagesLoadedCount = 0;
@@ -97,6 +100,38 @@ function renderFrame(index) {
 }
 
 /**
+ * Auxiliar para animar uma palavra-chave individual na Fase 3
+ */
+function animateSingleKeyword(kwElement, start, end, progress) {
+    if (progress >= start && progress <= end) {
+        const range = end - start;
+        const localProgress = (progress - start) / range; // 0 a 1
+        
+        let opacity, scale, yTranslate;
+        
+        if (localProgress <= 0.5) {
+            // Entrada (primeira metade)
+            const enterProgress = localProgress / 0.5; // 0 a 1
+            opacity = enterProgress;
+            scale = 0.85 + enterProgress * 0.15; // 0.85 a 1.0
+            yTranslate = (1 - enterProgress) * 30; // 30px a 0px
+        } else {
+            // Saída (segunda metade)
+            const exitProgress = (localProgress - 0.5) / 0.5; // 0 a 1
+            opacity = 1 - exitProgress;
+            scale = 1.0 + exitProgress * 0.15; // 1.0 a 1.15
+            yTranslate = exitProgress * -30; // 0px a -30px
+        }
+        
+        kwElement.style.opacity = opacity;
+        kwElement.style.transform = `translate3d(0, ${yTranslate}px, 0) scale(${scale})`;
+    } else {
+        kwElement.style.opacity = 0;
+        kwElement.style.transform = `translate3d(0, 30px, 0) scale(0.9)`;
+    }
+}
+
+/**
  * Inicializa a animação de scroll controlada pelo ScrollTrigger
  */
 function initScrollAnimations() {
@@ -104,22 +139,18 @@ function initScrollAnimations() {
     ScrollTrigger.create({
         trigger: '.hero',
         start: 'top top',
-        end: '+=700%', // Duração de 7 viewports de scroll para animação fluida
+        end: '+=1000%', // Duração estendida para 10 viewports para movimentos lentos e dramáticos
         pin: true,
         scrub: true,
         pinSpacing: true,
         onUpdate: (self) => {
             const progress = self.progress; // Progresso do scroll: 0 a 1
 
-            // 1. Atualiza a sequência de frames do Canvas (Completa em 90% do scroll)
-            const canvasProgress = Math.min(progress / 0.9, 1);
-            const frameIndex = Math.max(1, Math.min(totalFrames, Math.round(canvasProgress * (totalFrames - 1) + 1)));
-            currentFrameObj.frame = frameIndex;
-            renderFrame(frameIndex);
-
-            // 2. Animação da barra de navegação (Fade out nos primeiros 10% de scroll)
-            if (progress <= 0.1) {
-                const navOpacity = 1 - (progress / 0.1);
+            // ==========================================================================
+            // 0. Animação da barra de navegação (Fade out no início)
+            // ==========================================================================
+            if (progress <= 0.08) {
+                const navOpacity = 1 - (progress / 0.08);
                 nav.style.opacity = navOpacity;
                 nav.style.pointerEvents = 'auto';
             } else {
@@ -127,49 +158,149 @@ function initScrollAnimations() {
                 nav.style.pointerEvents = 'none';
             }
 
-            // 3. Animação do Header 3D (Recua e esmaece até os 25% de scroll)
-            if (progress <= 0.25) {
-                const headerProgress = progress / 0.25; // 0 a 1
-                const zTranslate = headerProgress * -1000; // Puxa de 0 a -1000px
+            // ==========================================================================
+            // 1. TÍTULO 1 (0.00 a 0.12) - "Transporte não é só chegar ao destino."
+            // ==========================================================================
+            if (progress <= 0.12) {
+                const step1Progress = progress / 0.12; // 0 a 1
+                const opacity = 1 - step1Progress;
+                const scale = 1.0 + step1Progress * 1.5; // Zoom out (cresce na tela)
+                const zTranslate = step1Progress * 800;  // Voa em direção à tela
                 
-                let opacity = 1;
-                if (progress >= 0.20) {
-                    // Efeito suave de fade out no final da sua transição 3D (entre 20% e 25%)
-                    opacity = 1 - ((progress - 0.20) / 0.05);
-                }
-                
-                header.style.transform = `translate3d(0, 0, ${zTranslate}px)`;
-                header.style.opacity = opacity;
-                header.style.visibility = 'visible';
+                step1.style.opacity = opacity;
+                step1.style.transform = `translate3d(0, 0, ${zTranslate}px) scale(${scale})`;
+                step1.style.visibility = 'visible';
             } else {
-                header.style.opacity = 0;
-                header.style.visibility = 'hidden';
+                step1.style.opacity = 0;
+                step1.style.visibility = 'hidden';
             }
 
-            // 4. Animação da Imagem do Dashboard (Surge entre 60% e 90% de scroll)
-            if (progress >= 0.60 && progress <= 0.90) {
-                const dashProgress = (progress - 0.60) / 0.30; // 0 a 1
-                const zTranslate = (1 - dashProgress) * 800; // Move de 800px para 0px (plano normal)
+            // ==========================================================================
+            // 2. TÍTULO 2 (0.14 a 0.28) - "É como você se sente durante o caminho."
+            // ==========================================================================
+            if (progress >= 0.14 && progress <= 0.28) {
+                step2.style.visibility = 'visible';
                 
-                let opacity = 0;
-                if (progress >= 0.60 && progress <= 0.80) {
-                    // Fade in gradual nos primeiros 2/3 da transição (entre 60% e 80%)
-                    opacity = (progress - 0.60) / 0.20;
-                } else if (progress > 0.80) {
-                    opacity = 1;
+                if (progress >= 0.14 && progress <= 0.20) {
+                    // Entrada: Surge de baixo para cima com fade
+                    const enterProgress = (progress - 0.14) / 0.06;
+                    const opacity = enterProgress;
+                    const yTranslate = (1 - enterProgress) * 80;
+                    
+                    step2.style.opacity = opacity;
+                    step2.style.transform = `translate3d(0, ${yTranslate}px, 0)`;
+                    step2.style.filter = 'blur(0px)';
+                } else if (progress > 0.20 && progress <= 0.22) {
+                    // Destaque parado no centro
+                    step2.style.opacity = 1;
+                    step2.style.transform = 'translate3d(0, 0, 0)';
+                    step2.style.filter = 'blur(0px)';
+                } else if (progress > 0.22 && progress <= 0.28) {
+                    // Efeito WOW de Saída: Dissolução 3D, blur progressivo e recuo para o fundo
+                    const exitProgress = (progress - 0.22) / 0.06;
+                    const opacity = 1 - exitProgress;
+                    const zTranslate = exitProgress * -1000;
+                    const blur = exitProgress * 25;
+                    
+                    step2.style.opacity = opacity;
+                    step2.style.transform = `translate3d(0, 0, ${zTranslate}px)`;
+                    step2.style.filter = `blur(${blur}px)`;
                 }
+            } else {
+                step2.style.opacity = 0;
+                step2.style.visibility = 'hidden';
+            }
+
+            // ==========================================================================
+            // 3. PALAVRAS-CHAVE (0.31 a 0.46) - "Experiência. Conforto. Exclusividade. Pontualidade."
+            // ==========================================================================
+            if (progress >= 0.31 && progress <= 0.46) {
+                step3.style.visibility = 'visible';
+                step3.style.opacity = 1;
+
+                // Anima cada palavra em sua respectiva mini-faixa de scroll
+                animateSingleKeyword(kw1, 0.310, 0.345, progress);
+                animateSingleKeyword(kw2, 0.345, 0.380, progress);
+                animateSingleKeyword(kw3, 0.380, 0.415, progress);
+                animateSingleKeyword(kw4, 0.415, 0.450, progress);
+            } else {
+                step3.style.opacity = 0;
+                step3.style.visibility = 'hidden';
+            }
+
+            // ==========================================================================
+            // 4. TÍTULO FORTE (0.48 a 0.60) - "Você merece mais do que uma corrida."
+            // ==========================================================================
+            if (progress >= 0.48 && progress <= 0.60) {
+                step4.style.visibility = 'visible';
                 
+                if (progress >= 0.48 && progress <= 0.53) {
+                    // Entrada: Efeito de impacto (escala encolhe até 1.0)
+                    const enterProgress = (progress - 0.48) / 0.05;
+                    const opacity = enterProgress;
+                    const scale = 1.4 - enterProgress * 0.4; // 1.4 a 1.0
+                    
+                    step4.style.opacity = opacity;
+                    step4.style.transform = `scale(${scale})`;
+                } else if (progress > 0.53 && progress <= 0.56) {
+                    // Destaque estático com leve pulso e brilho
+                    step4.style.opacity = 1;
+                    step4.style.transform = 'scale(1)';
+                } else if (progress > 0.56 && progress <= 0.60) {
+                    // Saída: Desaparece suavemente recuando
+                    const exitProgress = (progress - 0.56) / 0.04;
+                    const opacity = 1 - exitProgress;
+                    const zTranslate = exitProgress * 400;
+                    
+                    step4.style.opacity = opacity;
+                    step4.style.transform = `translate3d(0, 0, ${zTranslate}px)`;
+                }
+            } else {
+                step4.style.opacity = 0;
+                step4.style.visibility = 'hidden';
+            }
+
+            // ==========================================================================
+            // 5. REPRODUÇÃO DO VÍDEO (0.60 a 0.95)
+            // ==========================================================================
+            if (progress <= 0.60) {
+                // Durante toda a Fase 1 (Drama), o vídeo fica travado no primeiro frame
+                currentFrameObj.frame = 1;
+                renderFrame(1);
+            } else {
+                // A partir daqui, a estrada avança conforme o scroll
+                const canvasProgress = Math.min((progress - 0.60) / 0.35, 1); // 0 a 1 em 35% de scroll
+                const frameIndex = Math.max(1, Math.min(totalFrames, Math.round(canvasProgress * (totalFrames - 1) + 1)));
+                currentFrameObj.frame = frameIndex;
+                renderFrame(frameIndex);
+            }
+
+            // ==========================================================================
+            // 6. DASHBOARD & LOGOS DE CLIENTES (0.75 a 0.95)
+            // ==========================================================================
+            if (progress >= 0.75) {
+                const dashProgress = Math.min((progress - 0.75) / 0.20, 1); // 0 a 1 em 20% de scroll
+                const opacity = Math.min(dashProgress / 0.75, 1); // Atinge opacidade 1 antes do fim
+                const zTranslate = (1 - dashProgress) * 800; // Recua do Z-depth até 0px
+                const yLogos = (1 - dashProgress) * 30; // Logos sobem 30px até a posição
+                
+                // Dashboard
                 heroImage.style.transform = `translate3d(0, 0, ${zTranslate}px)`;
                 heroImage.style.opacity = opacity;
                 heroImage.style.pointerEvents = 'auto';
-            } else if (progress < 0.60) {
+
+                // Logos
+                clientLogosContainer.style.opacity = opacity * 0.95;
+                clientLogosContainer.style.transform = `translate3d(-50%, ${yLogos}px, 0)`;
+                clientLogosContainer.style.visibility = 'visible';
+            } else {
                 heroImage.style.opacity = 0;
                 heroImage.style.transform = `translate3d(0, 0, 800px)`;
                 heroImage.style.pointerEvents = 'none';
-            } else if (progress > 0.90) {
-                heroImage.style.opacity = 1;
-                heroImage.style.transform = `translate3d(0, 0, 0px)`;
-                heroImage.style.pointerEvents = 'auto';
+
+                clientLogosContainer.style.opacity = 0;
+                clientLogosContainer.style.transform = `translate3d(-50%, 30px, 0)`;
+                clientLogosContainer.style.visibility = 'hidden';
             }
         }
     });
@@ -177,12 +308,22 @@ function initScrollAnimations() {
 
 // Inicialização após o carregamento completo do DOM
 document.addEventListener('DOMContentLoaded', async () => {
-    // Buscar elementos
+    // Buscar elementos dramáticos
     nav = document.getElementById('main-nav');
-    header = document.querySelector('.header');
     canvas = document.getElementById('hero-canvas');
     context = canvas.getContext('2d');
     heroImage = document.querySelector('.hero-image');
+    
+    step1 = document.querySelector('.step-1');
+    step2 = document.querySelector('.step-2');
+    step3 = document.querySelector('.step-3');
+    step4 = document.querySelector('.step-4');
+    clientLogosContainer = document.querySelector('.client-logos-container');
+    
+    kw1 = document.getElementById('kw-1');
+    kw2 = document.getElementById('kw-2');
+    kw3 = document.getElementById('kw-3');
+    kw4 = document.getElementById('kw-4');
 
     // Inicializar o canvas e mostrar indicador de carregamento
     resizeCanvas();
@@ -194,12 +335,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Inicializar o Lenis (Smooth Scroll)
     lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing suave clássico
+        duration: 1.5, // Rotação ligeiramente mais lenta e suave para a introdução dramática
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         direction: 'vertical',
         gestureDirection: 'vertical',
         smooth: true,
-        mouseMultiplier: 1,
+        mouseMultiplier: 0.95,
         smoothTouch: false,
         touchMultiplier: 2,
         infinite: false,
@@ -234,7 +375,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (target) {
                 lenis.scrollTo(target, {
                     offset: 0,
-                    duration: 1.5,
+                    duration: 1.8,
                     immediate: false
                 });
             }
