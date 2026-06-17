@@ -1,0 +1,33 @@
+# robots.txt para LuxeDrive - Mobilidade Executiva Premium
+# Permitir que todos os rastreadores de busca tradicionais e motores de IA encontrem o LuxeDrive
+
+User-agent: *
+Allow: /
+
+# Rastreadores específicos de Inteligência Artificial e LLMs (OpenAI, Anthropic, Google, etc.)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Sitemap Link
+Sitemap: https://motorista.semprenamoda.com.br/sitemap.xml

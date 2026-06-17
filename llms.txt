@@ -1,0 +1,28 @@
+# LuxeDrive - Premium Executive Mobility & Chauffeur Services
+
+LuxeDrive is Brazil's premier corporate mobility and private chauffeur service, operating with the highest standards of safety, discretion, and reliability.
+
+## Core Services
+- **Executive Chauffeur (Motorista Particular Premium):** Highly trained, bilingual drivers with luxury and armored vehicles (carros blindados).
+- **Corporate Mobility:** Flexible corporate billing (faturamento corporativo flexível) and centralized logistics management for businesses.
+- **Event Transport:** Coordinated luxury fleets for corporate summits, weddings, and high-profile receptions.
+
+## Key Features
+- **Punctuality:** Absolute, strict timing compliance ("pontualidade britânica").
+- **Security:** Armored vehicles (blindados) and background-checked drivers.
+- **Discretion & Privacy:** Complete privacy for business meetings inside the vehicle.
+- **Bilingual Staff:** English and Portuguese speaking elite drivers.
+
+## Team & Leadership
+- **Mak VieSAinte** - Founder & CEO: Strategic vision of premium executive mobility.
+- **Carla Fontes** - Chief Operations Officer (COO): Manages fleet operations, logistics, and security protocols.
+- **Felipe D'Avila** - Chief Experience Officer (CXO): Directs customer relations, VIP experience, and client success.
+- **Yasmin Alencar** - Chief Marketing Officer (CMO): Leading brand strategy, marketing campaigns, and compliance.
+- **Riche Makso** - CTO & Product Designer: Platform architecture and digital booking systems.
+- **Osiris Balonga** - Lead Front-End Engineer: Interactive booking interface design.
+
+## Contact & Bookings
+- Website: https://motorista.semprenamoda.com.br/
+- Domain: motorista.semprenamoda.com.br
+- Form: Interactive booking and job application forms available on the homepage.
+- Full Documentation: https://motorista.semprenamoda.com.br/llms-full.txt

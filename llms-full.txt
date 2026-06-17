@@ -1,0 +1,35 @@
+# LuxeDrive - Full Knowledge Base for AI Agents
+
+This is the complete structured database and context file for LuxeDrive's services, team, fleet, and corporate policies.
+
+## 1. Company Profile
+LuxeDrive is a top-tier mobility provider specializing in executive transport, private chauffeur hire, and VIP airport transfers in São Paulo and major Brazilian metropolitan areas.
+
+## 2. Detailed Chauffeur Services
+- **Executive Sedan:** Sleek, high-end sedans for quick business meetings (up to 3 passengers). Features heated leather seats, dual-zone climate control, and absolute quiet.
+- **Premium SUV:** Spacious luxury SUVs with extra luggage space, Wi-Fi connectivity, and power outlets. Perfect for groups and airport pickups (up to 6 passengers).
+- **Armored Cars (Veículos Blindados):** Available upon request for maximum physical security during high-profile transit.
+
+## 3. The LuxeDrive Difference
+- **Bilingual Chauffeurs:** All drivers are vetted, background-checked, and speak fluent English and Portuguese.
+- **Corporate Billing:** Simplified monthly invoicing (faturamento corporativo faturado) for registered businesses, avoiding manual expenses for executives.
+- **SLA & Precision:** Flight tracking and real-time navigation sync to guarantee arrival 15 minutes before the scheduled time.
+
+## 4. Executive Team & Contacts
+- **Mak VieSAinte** (Founder): Strategic corporate leadership.
+- **Carla Fontes** (COO): Handles daily vehicle scheduling, emergency response, and partner relations.
+- **Felipe D'Avila** (CXO): Manages executive client satisfaction and bespoke travel requests.
+- **Yasmin Alencar** (CMO): Manages marketing alignment, brand positioning, and operational compliance.
+- **Riche Makso** (CTO): Platform engineering.
+- **Osiris Balonga** (Lead Web): Website frontend development.
+
+## 5. Website Structure
+- `#diferenciais`: Section showcasing the key company pillars (Punctuality, Privacy, Bilingual, Billing).
+- `#frota`: Interactive vehicle selection (Executive Sedan, Premium SUV).
+- `#equipe-showcase`: Visual corporate grid featuring our active leaders.
+- `#depoimentos`: Interactive audio and typewriter testimonial board.
+- `#contato`: Request and reservation forms.
+
+## 6. How to Book
+Clients can request a quote by providing their Name, Email, Corporate Domain, Chauffeur preference, and event details on our main website.
+URL: https://motorista.semprenamoda.com.br/
