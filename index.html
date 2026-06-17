@@ -19,34 +19,82 @@
 </head>
 <body>
 
-    <!-- Navegação Superior -->
-    <nav id="main-nav">
-        <div class="nav-links">
-            <a href="#diferenciais" class="nav-item" id="nav-link-diferenciais">Diferenciais</a>
-            <a href="#frota" class="nav-item" id="nav-link-frota">Frota</a>
-            <a href="#depoimentos" class="nav-item" id="nav-link-depoimentos">Depoimentos</a>
-            <a href="#contato" class="nav-item" id="nav-link-contato">Contato</a>
-        </div>
-        <div class="logo">
-            <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
-                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M12 2V9" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M12 15V22" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M2 12H9" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M15 12H22" stroke="currentColor" stroke-width="1.5"/>
-            </svg>
-            <span class="logo-text">LuxeDrive</span>
-        </div>
-        <div class="nav-buttons">
-            <div class="button secondary">
-                <a href="tel:+5511999999999" id="btn-phone">Ligar Agora</a>
+    <!-- Header Flutuante Premium -->
+    <header id="main-header">
+        <nav class="nav-container">
+            <!-- Esquerda: Logo -->
+            <div class="logo">
+                <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M12 2V9" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M12 15V22" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M2 12H9" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M15 12H22" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span class="logo-text">LuxeDrive</span>
             </div>
-            <div class="button primary">
-                <a href="#contato" id="btn-book">Contratar Agora</a>
+
+            <!-- Centro/Direita: Links e Botões (Desktop) -->
+            <div class="nav-desktop-menu">
+                <div class="nav-links">
+                    <a href="#diferenciais" class="nav-item">Diferenciais</a>
+                    <a href="#frota" class="nav-item">Frota</a>
+                    <a href="#depoimentos" class="nav-item">Depoimentos</a>
+                    <a href="#" class="nav-item" id="nav-link-sobre-nos">Sobre Nós</a>
+                    <a href="#contato" class="nav-item">Contato</a>
+                </div>
+                <div class="nav-buttons">
+                    <div class="button secondary">
+                        <a href="tel:+5511999999999" id="btn-phone">Ligar Agora</a>
+                    </div>
+                    <div class="button primary">
+                        <a href="#contato" id="btn-book">Contratar Agora</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão Hambúrguer (Mobile) -->
+            <button id="menu-toggle-btn" class="menu-toggle-btn" aria-label="Menu de Navegação">
+                <svg
+                    class="menu-toggle-icon"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path
+                        class="path-loop"
+                        d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+                    />
+                    <path class="path-middle" d="M7 16 27 16" />
+                </svg>
+            </button>
+        </nav>
+
+        <!-- Menu Mobile Overlay -->
+        <div id="mobile-menu-overlay" class="mobile-menu-overlay">
+            <div class="mobile-menu-content">
+                <div class="mobile-nav-links">
+                    <a href="#diferenciais" class="mobile-nav-item">Diferenciais</a>
+                    <a href="#frota" class="mobile-nav-item">Frota</a>
+                    <a href="#depoimentos" class="mobile-nav-item">Depoimentos</a>
+                    <a href="#" class="mobile-nav-item" id="mobile-link-sobre-nos">Sobre Nós</a>
+                    <a href="#contato" class="mobile-nav-item">Contato</a>
+                </div>
+                <div class="mobile-nav-buttons">
+                    <div class="button secondary">
+                        <a href="tel:+5511999999999">Ligar Agora</a>
+                    </div>
+                    <div class="button primary">
+                        <a href="#contato">Contratar Agora</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
+    </header>
 
     <!-- Seção Hero com Canvas e Elementos 3D -->
     <section class="hero" id="hero-section">
@@ -344,6 +392,9 @@
     <footer class="main-footer">
         <p>&copy; 2026 LuxeDrive. Todos os direitos reservados. Serviços Premium de Motorista Executivo.</p>
     </footer>
+
+    <!-- Contêiner do Modal Sobre Nós e Trabalhe Conosco (Carregado via Lazy-Load) -->
+    <div id="sobre-nos-modal-container"></div>
 
     <!-- Custom JavaScript -->
     <script type="module" src="main.js"></script>
