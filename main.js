@@ -6,7 +6,7 @@ import Lenis from 'https://esm.sh/lenis@1.1.2';
 gsap.registerPlugin(ScrollTrigger);
 
 // Elementos da página e variáveis de controle
-let nav, canvas, context, lenis;
+let nav, canvas, context, lenis, heroOverlay;
 let step1, step2, step3, step4, clientLogosContainer;
 let kw1, kw2, kw3, kw4;
 
@@ -265,18 +265,43 @@ function initScrollAnimations() {
             }
 
             // ==========================================================================
-            // 5. REPRODUÇÃO DO VÍDEO (0.60 a 0.98)
+            // 5. REPRODUÇÃO DO VÍDEO & OPACIDADE DO OVERLAY (0.60 a 0.98)
             // ==========================================================================
+            let overlayOpacity = 1.0;
+
             if (progress <= 0.60) {
-                // Durante toda a Fase 1 (Drama), o vídeo fica travado no primeiro frame
+                // Durante toda a Fase de Drama, o vídeo fica travado no primeiro frame e o overlay escuro fica opaco (100%)
                 currentFrameObj.frame = 1;
                 renderFrame(1);
+                overlayOpacity = 1.0;
             } else {
                 // A partir daqui, a estrada avança conforme o scroll por todo o restante do hero
                 const canvasProgress = Math.min((progress - 0.60) / 0.38, 1); // 0 a 1 em 38% de scroll (termina em ~0.98)
                 const frameIndex = Math.max(1, Math.min(totalFrames, Math.round(canvasProgress * (totalFrames - 1) + 1)));
                 currentFrameObj.frame = frameIndex;
                 renderFrame(frameIndex);
+
+                // Mapeamento de opacidade para o overlay:
+                // Quando o vídeo começa a tocar (progress > 0.60), tiramos a opacidade RAPIDAMENTE até 0.1 (estrada nítida)
+                // De 0.60 a 0.68 (8% do scroll total), a opacidade vai de 1.0 para 0.1.
+                // De 0.68 a 0.90 (durante a estrada rodando), a opacidade fica em 0.1 (quase transparente).
+                // De 0.90 a 0.98 (no finalzinho), a opacidade volta gradualmente para 1.0 para fazer o fade.
+                if (progress > 0.60 && progress <= 0.68) {
+                    const localProgress = (progress - 0.60) / 0.08;
+                    overlayOpacity = 1.0 - (localProgress * 0.9); // 1.0 a 0.1
+                } else if (progress > 0.68 && progress <= 0.90) {
+                    overlayOpacity = 0.1;
+                } else if (progress > 0.90 && progress <= 0.98) {
+                    const localProgress = (progress - 0.90) / 0.08;
+                    overlayOpacity = 0.1 + (localProgress * 0.9); // 0.1 a 1.0
+                } else {
+                    overlayOpacity = 1.0;
+                }
+            }
+
+            // Aplica a opacidade calculada ao overlay do canvas
+            if (heroOverlay) {
+                heroOverlay.style.opacity = overlayOpacity;
             }
 
             // ==========================================================================
@@ -305,6 +330,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     nav = document.getElementById('main-nav');
     canvas = document.getElementById('hero-canvas');
     context = canvas.getContext('2d');
+    heroOverlay = document.getElementById('hero-overlay');
     
     step1 = document.querySelector('.step-1');
     step2 = document.querySelector('.step-2');
